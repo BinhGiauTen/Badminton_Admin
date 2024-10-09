@@ -43,4 +43,45 @@
   display: none;
 }
 
+.forgot-password-container {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+  margin: auto;
+}
+
+.otp-image {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-wrapper {
+  width: 100%;
+}
+
+.custom-input {
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ced4da;
+  font-size: 1rem;
+}
+
+.custom-button {
+  background-color: #007bff;
+  border: none;
+  padding: 15px;
+  font-size: 1.2rem;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.custom-button:hover {
+  background-color: #0056b3;
+}
+
+
 
