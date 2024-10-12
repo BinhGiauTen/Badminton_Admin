@@ -14,7 +14,8 @@ import { Layout, Menu, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
+import { useSelector } from "react-redux";
+// import ModalProfile from "./ModalProfile";
 
 const { Header, Sider, Content } = Layout;
 
@@ -24,6 +25,8 @@ const MainLayout = () => {
     token: { colorBgContainer },
   } = theme.useToken();
   const navigate = useNavigate();
+
+  const userState = useSelector((state) => state?.auth?.user);
 
   return (
     <Layout>
@@ -62,7 +65,7 @@ const MainLayout = () => {
               label: "Users",
             },
             {
-              key: "courses",
+              key: "course-list",
               icon: <FaBloggerB className="fs-4" />,
               label: "Courses",
               children: [
@@ -109,29 +112,41 @@ const MainLayout = () => {
             <div className="d-flex gap-3 align-items-center">
               <div>
                 <img
-                  width={32}
-                  height={32}
+                  width={36}
+                  height={36}
                   src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
                   alt=""
+                  className="avatar-img"
                 />
               </div>
               <div
-                className="dropdown-toggle"
+                className="dropdown-toggle profile"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h6 className="mb-0">Binh</h6>
-                <p className="mb-0">binhpro50@gmail.com</p>
+                <h6 className="mb-0">{userState?.user_name}</h6>
+                <p className="mb-0">{userState?.email}</p>
               </div>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton1"
+              >
                 <li>
-                  <Link class="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} to="/">
+                  <div
+                    className="dropdown-item py-1 mb-1"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                  >
                     View Profile
-                  </Link>
+                  </div>
                 </li>
+                {/* <ModalProfile /> */}
                 <li>
-                  <Link class="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} to="/login">
+                  <Link
+                    className="dropdown-item py-1 mb-1"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                    to="/login"
+                  >
                     Signout
                   </Link>
                 </li>

@@ -36,11 +36,11 @@ const Login = () => {
   useEffect(() => {
     if (message === "Login successful") {
       toast.success("Login successful !!!");
-      navigate("/admin");
+      navigate("/");
     } else if (message === "Login fail") {
       toast.error("Login fail !!!");
     }
-  }, [message]);
+  }, [message,navigate]);
 
   return (
     <>
@@ -84,7 +84,7 @@ const Login = () => {
               ) : null}
             </div>
             <div className="mb-3 text-end">
-              <Link to="forgot-password">Forgot Password</Link>
+              <Link to="/forgot-password">Forgot Password</Link>
             </div>
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5"

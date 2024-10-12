@@ -83,5 +83,11 @@
   background-color: #0056b3;
 }
 
+.avatar-img{
+  border-radius: 20px;
+}
 
+.profile:hover{
+  cursor: pointer;
+}
 
