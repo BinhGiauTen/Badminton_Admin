@@ -61,7 +61,7 @@ export const coachSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.deletedCoaches = action.payload;
+        state.deletedCoach = action.payload;
       })
       .addCase(deleteCoach.rejected, (state, action) => {
         state.isLoading = false;

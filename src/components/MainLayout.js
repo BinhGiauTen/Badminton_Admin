@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import {
   AiOutlineDashboard,
   AiOutlineUserAdd,
@@ -14,7 +13,9 @@ import { Layout, Menu, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+import { toast } from "react-toastify";
 // import ModalProfile from "./ModalProfile";
 
 const { Header, Sider, Content } = Layout;
@@ -24,9 +25,29 @@ const MainLayout = () => {
   const {
     token: { colorBgContainer },
   } = theme.useToken();
+
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const userState = useSelector((state) => state?.auth?.user);
+
+  const handleLogout = () => {
+    dispatch(logout());
+  }
+
+  const { message } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (message === "Logout successful") {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      navigate("/login");
+      toast.success("Logout successful !!!");
+    }else if(message === "Logout fail"){
+      toast.error("Logout fail !!!");
+    }
+  }, [message,navigate]);
+
 
   return (
     <Layout>
@@ -142,13 +163,13 @@ const MainLayout = () => {
                 </li>
                 {/* <ModalProfile /> */}
                 <li>
-                  <Link
+                  <button
                     className="dropdown-item py-1 mb-1"
                     style={{ height: "auto", lineHeight: "20px" }}
-                    to="/login"
+                    onClick={handleLogout}
                   >
                     Signout
-                  </Link>
+                  </button>
                 </li>
               </ul>
             </div>
