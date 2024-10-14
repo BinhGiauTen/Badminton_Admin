@@ -12,6 +12,7 @@ import ForgotPassword from './pages/auth/ForgotPassword';
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import VerifyOTP from './pages/auth/VerifyOTP';
+import ResetPassword from './pages/auth/ResetPassword';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
         <Route  path="/login" element={<Login/>}/>
         <Route  path="/forgot-password" element={<ForgotPassword/>}/>
         <Route  path="/verify-otp" element={<VerifyOTP/>}/>
+        <Route  path="/reset-password" element={<ResetPassword/>}/>
       </Routes>
     </Router>
     <ToastContainer

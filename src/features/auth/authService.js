@@ -11,24 +11,20 @@ const login = async (user) => {
   return response.data;
 };
 
-const forgotPassword = async (email) => {
+const forgotPassword = async (data) => {
   const response = await axios.post(
     `${base_url}auth/forgot-password`,
-    {
-      email,
-    },
+    data
+    ,
     config
   );
   return response.data;
 };
 
-const resetPassword = async (otp, newPassword) => {
+const resetPassword = async (data) => {
   const response = await axios.post(
     `${base_url}auth/reset-password`,
-    {
-      otp,
-      newPassword,
-    },
+    data,
     config
   );
   return response.data;

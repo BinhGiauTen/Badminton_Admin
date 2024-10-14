@@ -29,11 +29,9 @@ const MainLayout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userState = useSelector((state) => state?.auth?.user);
-
   const handleLogout = () => {
     dispatch(logout());
-  }
+  };
 
   const { message } = useSelector((state) => state.auth);
 
@@ -43,11 +41,10 @@ const MainLayout = () => {
       localStorage.removeItem("token");
       navigate("/login");
       toast.success("Logout successful !!!");
-    }else if(message === "Logout fail"){
+    } else if (message === "Logout fail") {
       toast.error("Logout fail !!!");
     }
-  }, [message,navigate]);
-
+  }, [message, navigate]);
 
   return (
     <Layout>
@@ -133,41 +130,29 @@ const MainLayout = () => {
             <div className="d-flex gap-3 align-items-center">
               <div>
                 <img
-                  width={36}
-                  height={36}
+                  width={32}
+                  height={32}
                   src="https://stroyka-admin.html.themeforest.scompiler.ru/variants/ltr/images/customers/customer-4-64x64.jpg"
                   alt=""
-                  className="avatar-img"
                 />
               </div>
               <div
-                className="dropdown-toggle profile"
+                className="dropdown-toggle"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h6 className="mb-0">{userState?.user_name}</h6>
-                <p className="mb-0">{userState?.email}</p>
+                <h6 className="mb-0">Binh</h6>
+                <p className="mb-0">binhpro50@gmail.com</p>
               </div>
-              <ul
-                className="dropdown-menu"
-                aria-labelledby="dropdownMenuButton1"
-              >
+              <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
-                  <div
-                    className="dropdown-item py-1 mb-1"
-                    style={{ height: "auto", lineHeight: "20px" }}
-                  >
+                  <button className="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} >
                     View Profile
-                  </div>
+                  </button>
                 </li>
-                {/* <ModalProfile /> */}
                 <li>
-                  <button
-                    className="dropdown-item py-1 mb-1"
-                    style={{ height: "auto", lineHeight: "20px" }}
-                    onClick={handleLogout}
-                  >
+                  <button className="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} onClick={handleLogout}>
                     Signout
                   </button>
                 </li>
