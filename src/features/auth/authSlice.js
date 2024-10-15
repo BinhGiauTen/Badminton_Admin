@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import authService from "./authService";
 
 const getUserFromLocalStorage = localStorage.getItem("user")
@@ -54,6 +54,8 @@ export const logout = createAsyncThunk("auth/logout", async (thunkAPI) => {
   }
 });
 
+export const resetState = createAction("Reset_all");
+
 
 export const authSlice = createSlice({
   name: "auth",
@@ -84,13 +86,14 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
+        state.message = "OTP sent to email successfully";
         state.otp = action.payload;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error;
+        state.message = "Failed to send OTP";
       })
       .addCase(resetPassword.pending, (state) => {
         state.isLoading = true;
@@ -100,12 +103,13 @@ export const authSlice = createSlice({
         state.isError = false;
         state.isSuccess = true;
         state.user = action.payload;
+        state.message = "Update password successfully";
       })
       .addCase(resetPassword.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
-        state.message = action.error;
+        state.message = "Update password fail";
       })
       .addCase(logout.pending, (state) => {
         state.isLoading = true;
@@ -121,7 +125,8 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = "Logout fail";
-      });
+      })
+      .addCase(resetState, () => initialState);
   },
 });
 

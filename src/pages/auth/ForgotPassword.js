@@ -2,12 +2,10 @@ import React, {useEffect} from "react";
 import CustomInput from "../../components/CustomInput";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { forgotPassword } from "../../features/auth/authSlice";
+import { forgotPassword, resetState } from "../../features/auth/authSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-
-
 
 const Forgotpassword = () => {
   const navigate = useNavigate();
@@ -32,15 +30,17 @@ const Forgotpassword = () => {
     },
   });
 
-  const otp = useSelector((state) => state?.auth?.otp || null);
+  const {message} = useSelector((state) => state?.auth);
   useEffect(() => {
-    if (otp) {
+    if (message === "OTP sent to email successfully") {
       toast.success("OTP sent to email successfully !!!");
       navigate("/reset-password", { state: { email: formik.values.email } });
-    } else {
+      dispatch(resetState());
+    } else if(message === "Failed to send OTP") {
       toast.error("Email not found !!!");
+      dispatch(resetState());
     }
-  }, [otp,navigate]);
+  }, [message,navigate, dispatch, formik.values.email]);
 
 
   return (

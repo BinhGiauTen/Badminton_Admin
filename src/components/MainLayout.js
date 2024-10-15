@@ -11,12 +11,10 @@ import { FaClipboardList, FaBloggerB } from "react-icons/fa";
 import { ImBlog } from "react-icons/im";
 import { Layout, Menu, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
-// import ModalProfile from "./ModalProfile";
 
 const { Header, Sider, Content } = Layout;
 
@@ -33,7 +31,9 @@ const MainLayout = () => {
     dispatch(logout());
   };
 
-  const { message } = useSelector((state) => state.auth);
+  const userState = useSelector((state)=> state?.auth?.user);
+
+  const { message } = useSelector((state) => state?.auth);
 
   useEffect(() => {
     if (message === "Logout successful") {
@@ -137,13 +137,13 @@ const MainLayout = () => {
                 />
               </div>
               <div
-                className="dropdown-toggle"
+                className="dropdown-toggle profile"
                 id="dropdownMenuButton1"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h6 className="mb-0">Binh</h6>
-                <p className="mb-0">binhpro50@gmail.com</p>
+                <h6 className="mb-0">{userState?.user_name}</h6>
+                <p className="mb-0">{userState?.email}</p>
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>
@@ -168,17 +168,6 @@ const MainLayout = () => {
             background: colorBgContainer,
           }}
         >
-          <ToastContainer
-            position="top-right"
-            autoClose={250}
-            hideProgressBar={false}
-            newestOnTop={true}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            theme="light"
-          />
           <Outlet />
         </Content>
       </Layout>

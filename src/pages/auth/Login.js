@@ -4,9 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../../features/auth/authSlice";
+import { login, resetState } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
-
+import { passwordRegex } from "../../constant/Regex";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -15,7 +15,10 @@ const Login = () => {
     email: Yup.string()
       .email("Email should be valid")
       .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+    password: Yup.string()
+    .matches(passwordRegex,"New password must contain at least 8 characters, an uppercase, a number and special characters")
+    .max(24, "Password cannot exceed 24 characters")
+    .required("Password is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -39,8 +42,9 @@ const Login = () => {
       navigate("/");
     } else if (message === "Login fail") {
       toast.error("Login fail !!!");
+      dispatch(resetState());
     }
-  }, [message,navigate]);
+  }, [message, navigate, dispatch]);
 
   return (
     <>

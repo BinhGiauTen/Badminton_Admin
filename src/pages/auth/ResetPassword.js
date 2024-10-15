@@ -1,12 +1,13 @@
-import React from "react";
+import React, {useEffect} from "react";
 import CustomInput from "../../components/CustomInput";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { resetPassword } from "../../features/auth/authSlice";
+import { resetPassword, resetState } from "../../features/auth/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { passwordRegex } from "../../constant/Regex";
 
 const ResetPassword = () => {
   const dispatch = useDispatch();
@@ -15,8 +16,13 @@ const ResetPassword = () => {
   const email = location.state?.email;
 
   const schema = Yup.object().shape({
-    otp: Yup.string().required("otp is required"),
-    newPassword: Yup.string().required("Password is required"),
+    otp: Yup.string()
+    .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
+    .required("Otp is required"),
+    newPassword: Yup.string()
+    .matches(passwordRegex,"New password must contain at least 8 characters, an uppercase, a number and special characters")
+    .max(24, "New password cannot exceed 24 characters")
+    .required("New password is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -33,6 +39,19 @@ const ResetPassword = () => {
       dispatch(resetPassword(data));
     },
   });
+
+  const { message } = useSelector((state) => state?.auth);
+
+  useEffect(() => {
+    if (message === "Update password successfully") {
+      toast.success("Update password successfully !!!");
+      navigate("/login");
+      dispatch(resetState());
+    } else if (message === "Update password fail") {
+      toast.error("Update password fail !!!");
+      dispatch(resetState());
+    }
+  }, [message, navigate, dispatch]);
 
   return (
     <>
@@ -79,6 +98,9 @@ const ResetPassword = () => {
               ) : null}
             </div>
             <br />
+            <div className="mb-3 text-end">
+              <Link to="/forgot-password">Back to forgot Password</Link>
+            </div>
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100"
               style={{ background: "#ffd333" }}
