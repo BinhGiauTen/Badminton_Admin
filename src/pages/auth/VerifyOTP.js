@@ -1,13 +1,62 @@
-import React from "react";
+import React, {useContext} from "react";
 import CustomInput from "../../components/CustomInput";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { toast } from "react-toastify";
+import { verifyOTP } from "../../features/auth/authSlice";
+import AuthContext from "../../context/AuthContext";
+
 
 const VerifyOTP = () => {
+  const { storeAuthData } = useContext(AuthContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleVerifyOTP = () => {
-    navigate("/");
-  };
+  const location = useLocation();
+  const email = location.state?.email;
+
+  const schema = Yup.object().shape({
+    otp: Yup.string()
+    .matches(/^\d{6}$/, "OTP must be exactly 6 digits")
+    .required("Otp is required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      otp: "",
+    },
+    validationSchema: schema,
+    onSubmit: (values) => {
+      const data = {
+        ...values,
+        email: email,
+        role: "admin",
+      };
+      dispatch(verifyOTP(data)).unwrap()
+      .then((userState) => {
+        console.log("User state in otp:", userState);
+        storeAuthData(userState?.data?.user, userState?.data?.token);
+        toast.success("You have been login successfully.")
+        navigate("/");
+
+      })
+      .catch((error) => {
+        if (error === "Request failed with status code 400") {
+          toast.error("The OTP you entered is incorrect. Please try again.")
+        } else if (error === "Request failed with status code 404") {
+          toast.error("No account associated with this information was found. Please check and try again.")
+        } else if (error === "Network Error") {
+          toast.error("There was a problem with the server. Please try again later.")
+        } else {
+          toast.error("An unknown error occurred.")
+        }
+      });
+    },
+  });
+
+
 
   return (
     <>
@@ -25,14 +74,25 @@ const VerifyOTP = () => {
           <p className="text-center">
             Please enter the One Time Passcode (OTP) sent to your email address.
           </p>
-          <form action="">
-            <CustomInput type="text" label="OTP Code" id="otp" />
+          <form action="" onSubmit={formik.handleSubmit}>
+            <CustomInput
+              type="text"
+              label="OTP Code"
+              id="otp"
+              name="otp"
+              val={formik.values.otp}
+              onCh={formik.handleChange("otp")}
+            />
+            <div className="error">
+              {formik.touched.otp && formik.errors.otp ? (
+                <div>{formik.errors.otp}</div>
+              ) : null}
+            </div>
             <br />
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100"
               style={{ background: "#ffd333" }}
               type="submit"
-              onClick={() => handleVerifyOTP()}
             >
               Verify OTP
             </button>

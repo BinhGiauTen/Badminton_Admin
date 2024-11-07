@@ -45,6 +45,18 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
+export const verifyOTP = createAsyncThunk(
+  "auth/verify-otp",
+  async (data, thunkAPI) => {
+    try {
+      return await authService.verifyOTP(data);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const logout = createAsyncThunk("auth/logout", async (_,thunkAPI) => {
   try {
     return await authService.logout();
@@ -101,6 +113,21 @@ export const authSlice = createSlice({
         state.user = action.payload;
       })
       .addCase(resetPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+      .addCase(verifyOTP.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(verifyOTP.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(verifyOTP.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import CustomInput from "../../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -7,10 +7,8 @@ import { useDispatch } from "react-redux";
 import { login } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { passwordRegex } from "../../constant/Regex";
-import AuthContext from "../../context/AuthContext";
 
 const Login = () => {
-  const { storeAuthData } = useContext(AuthContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const schema = Yup.object().shape({
@@ -39,9 +37,10 @@ const Login = () => {
       dispatch(login(loginData))
         .unwrap()
         .then((userState) => {
-          // storeAuthData(userState.person, userState.token);
           toast.success("An otp has been sent to your email.");
-          navigate("/verify-otp");
+          navigate("/verify-otp", {
+            state: { email: formik.values.email },
+          });
         })
         .catch((error) => {
           if (error === "Request failed with status code 400") {
