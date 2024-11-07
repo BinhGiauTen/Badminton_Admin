@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   AiOutlineDashboard,
   AiOutlineUserAdd,
@@ -15,10 +15,13 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
+import { loadUserFromSecureStore } from "../features/admin/adminSlice";
+import AuthContext from "../context/AuthContext";
 
 const { Header, Sider, Content } = Layout;
 
 const MainLayout = () => {
+  const {clearAuthData} = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -28,23 +31,30 @@ const MainLayout = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout());
+    dispatch(logout()).unwrap()
+    .then(() => {
+      clearAuthData();
+      toast.success("You have been logged out successfully.")
+    })
+    .catch((error) => {
+
+      if (error === "Network Error") {
+        toast.error("There was a problem with the server. Please try again later.")
+        
+      } else {
+        toast.error("An unknown error occurred.")
+        
+      }
+    });
   };
 
-  const userState = useSelector((state)=> state?.auth?.user);
-
-  const { message } = useSelector((state) => state?.auth);
+  const adminState = useSelector((state)=> state?.admin?.admin);
+  console.log("Admin state:", adminState);
 
   useEffect(() => {
-    if (message === "Logout successful") {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      navigate("/login");
-      toast.success("Logout successful !!!");
-    } else if (message === "Logout fail") {
-      toast.error("Logout fail !!!");
-    }
-  }, [message, navigate]);
+    dispatch(loadUserFromSecureStore());
+  }, [dispatch]);
+
 
   return (
     <Layout>
@@ -142,8 +152,8 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h6 className="mb-0">{userState?.user_name}</h6>
-                <p className="mb-0">{userState?.email}</p>
+                <h6 className="mb-0">{adminState?.user_name}</h6>
+                <p className="mb-0">{adminState?.email}</p>
               </div>
               <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 <li>

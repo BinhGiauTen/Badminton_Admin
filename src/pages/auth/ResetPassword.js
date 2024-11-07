@@ -1,11 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import CustomInput from "../../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
-import { resetPassword, resetState } from "../../features/auth/authSlice";
-import { useDispatch, useSelector } from "react-redux";
+import { resetPassword } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { passwordRegex } from "../../constant/Regex";
 
@@ -36,22 +36,24 @@ const ResetPassword = () => {
         email: email,
         role: "admin",
       };
-      dispatch(resetPassword(data));
+      dispatch(resetPassword(data)).unwrap()
+      .then(() => {
+        toast.success("Your password has been reset successfully.")
+        navigate("/login");
+      })
+      .catch((error) => {
+        if (error === "Request failed with status code 400") {
+          toast.error("The OTP you entered is incorrect. Please try again.")
+        } else if (error === "Request failed with status code 404") {
+          toast.error("No account associated with this information was found. Please check and try again.")
+        } else if (error === "Network Error") {
+          toast.error("There was a problem with the server. Please try again later.")
+        } else {
+          toast.error("An unknown error occurred.")
+        }
+      });
     },
   });
-
-  const { message } = useSelector((state) => state?.auth);
-
-  useEffect(() => {
-    if (message === "Update password successfully") {
-      toast.success("Update password successfully !!!");
-      navigate("/login");
-      dispatch(resetState());
-    } else if (message === "Update password fail") {
-      toast.error("Update password fail !!!");
-      dispatch(resetState());
-    }
-  }, [message, navigate, dispatch]);
 
   return (
     <>

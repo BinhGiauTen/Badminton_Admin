@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useContext } from "react";
 import CustomInput from "../../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { login, resetState } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { login } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { passwordRegex } from "../../constant/Regex";
+import AuthContext from "../../context/AuthContext";
 
 const Login = () => {
+  const { storeAuthData } = useContext(AuthContext);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const schema = Yup.object().shape({
@@ -16,9 +18,12 @@ const Login = () => {
       .email("Email should be valid")
       .required("Email is required"),
     password: Yup.string()
-    .matches(passwordRegex,"New password must contain at least 8 characters, an uppercase, a number and special characters")
-    .max(24, "Password cannot exceed 24 characters")
-    .required("Password is required"),
+      .matches(
+        passwordRegex,
+        "New password must contain at least 8 characters, an uppercase, a number and special characters"
+      )
+      .max(24, "Password cannot exceed 24 characters")
+      .required("Password is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -31,20 +36,28 @@ const Login = () => {
         ...values,
         role: "admin",
       };
-      dispatch(login(loginData));
+      dispatch(login(loginData))
+        .unwrap()
+        .then((userState) => {
+          // storeAuthData(userState.person, userState.token);
+          toast.success("An otp has been sent to your email.");
+          navigate("/verify-otp");
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 400") {
+            toast.error("Invalid email or password.");
+          } else if (error === "Request failed with status code 404") {
+            toast.error("The user does not exist.");
+          } else if (error === "Network Error") {
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
     },
   });
-  const { message } = useSelector((state) => state?.auth);
-
-  useEffect(() => {
-    if (message === "Login successful") {
-      toast.success("Login successful !!!");
-      navigate("/");
-    } else if (message === "Login fail") {
-      toast.error("Login fail !!!");
-      dispatch(resetState());
-    }
-  }, [message, navigate, dispatch]);
 
   return (
     <>

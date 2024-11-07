@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React from "react";
 import CustomInput from "../../components/CustomInput";
 import { useNavigate } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { forgotPassword, resetState } from "../../features/auth/authSlice";
+import { useDispatch } from "react-redux";
+import { forgotPassword } from "../../features/auth/authSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
@@ -26,22 +26,31 @@ const Forgotpassword = () => {
         email: values.email,
         role: "admin",
       };
-      dispatch(forgotPassword(data));
+      dispatch(forgotPassword(data))
+        .unwrap()
+        .then(() => {
+          toast.success(
+            "If your email is registered, you will receive a link to reset your password shortly."
+          );
+          navigate("/reset-password", {
+            state: { email: formik.values.email },
+          });
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error(
+              "We couldn't find an account associated with that email address. Please check and try again."
+            );
+          } else if (error === "Network Error") {
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
     },
   });
-
-  const {message} = useSelector((state) => state?.auth);
-  useEffect(() => {
-    if (message === "OTP sent to email successfully") {
-      toast.success("OTP sent to email successfully !!!");
-      navigate("/reset-password", { state: { email: formik.values.email } });
-      dispatch(resetState());
-    } else if(message === "Failed to send OTP") {
-      toast.error("Email not found !!!");
-      dispatch(resetState());
-    }
-  }, [message,navigate, dispatch, formik.values.email]);
-
 
   return (
     <>
