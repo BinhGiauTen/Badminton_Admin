@@ -1,15 +1,9 @@
 import "./App.css";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import MainLayout from "./components/MainLayout";
 import Coaches from "./pages/Coaches";
 import Users from "./pages/Users";
-import Courses from "./pages/Courses";
-import AddCourse from "./pages/AddCourse";
 import Login from "./pages/auth/Login";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import { ToastContainer } from "react-toastify";
@@ -18,6 +12,10 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import { useContext } from "react";
 import AuthContext from "./context/AuthContext";
+import Categories from "./pages/Categories";
+import AddCategory from "./pages/AddCategory";
+import FreeCourses from "./pages/FreeCourses";
+import AddFreeCourse from "./pages/AddFreeCourse";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -31,8 +29,12 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="coaches" element={<Coaches />} />
               <Route path="users" element={<Users />} />
-              <Route path="courses" element={<Courses />} />
-              <Route path="course" element={<AddCourse />} />
+              <Route path="free-courses" element={<FreeCourses />} />
+              <Route path="free-course" element={<AddFreeCourse />} />
+              <Route path="free-course/:id" element={<AddFreeCourse />} />
+              <Route path="categories" element={<Categories />} />
+              <Route path="category" element={<AddCategory />} />
+              <Route path="category/:id" element={<AddCategory />} />
             </Route>
           ) : (
             <>

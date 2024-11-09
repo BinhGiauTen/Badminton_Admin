@@ -21,7 +21,7 @@ import AuthContext from "../context/AuthContext";
 const { Header, Sider, Content } = Layout;
 
 const MainLayout = () => {
-  const {clearAuthData} = useContext(AuthContext);
+  const { clearAuthData } = useContext(AuthContext);
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -31,30 +31,29 @@ const MainLayout = () => {
   const dispatch = useDispatch();
 
   const handleLogout = () => {
-    dispatch(logout()).unwrap()
-    .then(() => {
-      clearAuthData();
-      toast.success("You have been logged out successfully.")
-    })
-    .catch((error) => {
-
-      if (error === "Network Error") {
-        toast.error("There was a problem with the server. Please try again later.")
-        
-      } else {
-        toast.error("An unknown error occurred.")
-        
-      }
-    });
+    dispatch(logout())
+      .unwrap()
+      .then(() => {
+        clearAuthData();
+        toast.success("You have been logged out successfully.");
+      })
+      .catch((error) => {
+        if (error === "Network Error") {
+          toast.error(
+            "There was a problem with the server. Please try again later."
+          );
+        } else {
+          toast.error("An unknown error occurred.");
+        }
+      });
   };
 
-  const adminState = useSelector((state)=> state?.admin?.admin);
+  const adminState = useSelector((state) => state?.admin?.admin);
   console.log("Admin state:", adminState);
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
   }, [dispatch]);
-
 
   return (
     <Layout>
@@ -93,19 +92,36 @@ const MainLayout = () => {
               label: "Users",
             },
             {
-              key: "course-list",
+              key: "free-course-list",
               icon: <FaBloggerB className="fs-4" />,
-              label: "Courses",
+              label: "Free Courses",
               children: [
                 {
-                  key: "course",
+                  key: "free-course",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Course",
+                  label: "Add Free Course",
                 },
                 {
-                  key: "courses",
+                  key: "free-courses",
                   icon: <FaBloggerB className="fs-4" />,
-                  label: "Courses",
+                  label: "Free Courses",
+                },
+              ],
+            },
+            {
+              key: "category-list",
+              icon: <FaBloggerB className="fs-4" />,
+              label: "Categories",
+              children: [
+                {
+                  key: "category",
+                  icon: <ImBlog className="fs-4" />,
+                  label: "Add Category",
+                },
+                {
+                  key: "categories",
+                  icon: <FaBloggerB className="fs-4" />,
+                  label: "Categories",
                 },
               ],
             },
@@ -152,17 +168,29 @@ const MainLayout = () => {
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
-                <h6 className="mb-0">{adminState?.user_name}</h6>
+                <h6 className="mb-0">
+                  {adminState?.firstName} {adminState?.lastName}
+                </h6>
                 <p className="mb-0">{adminState?.email}</p>
               </div>
-              <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+              <ul
+                className="dropdown-menu"
+                aria-labelledby="dropdownMenuButton1"
+              >
                 <li>
-                  <button className="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} >
+                  <button
+                    className="dropdown-item py-1 mb-1"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                  >
                     View Profile
                   </button>
                 </li>
                 <li>
-                  <button className="dropdown-item py-1 mb-1" style={{"height":"auto","lineHeight":"20px"}} onClick={handleLogout}>
+                  <button
+                    className="dropdown-item py-1 mb-1"
+                    style={{ height: "auto", lineHeight: "20px" }}
+                    onClick={handleLogout}
+                  >
                     Signout
                   </button>
                 </li>
