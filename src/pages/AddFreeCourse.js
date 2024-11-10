@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../components/CustomInput";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
@@ -17,7 +17,8 @@ let schema = yup.object().shape({
   name: yup.string().required("Free course name is required"),
   description: yup.string().required("Description is required"),
   thumbnail: yup.string().required("Thumbnail is required"),
-  lessionQuantity: yup.number().required("Lession quantity is required"),
+  lessonQuantity: yup.number().required("Lesson quantity is required"),
+  categoryId: yup.number().required("Category is required"),
 });
 
 const AddFreeCourse = () => {
@@ -35,20 +36,26 @@ const AddFreeCourse = () => {
     } else {
       dispatch(resetState());
     }
-  }, [getFreeCourseId]);
+  }, [dispatch,getFreeCourseId]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       name: freeCourse?.name || "",
       description: freeCourse?.description || "",
       thumbnail: freeCourse?.thumbnail || "",
-      lessionQuantity: freeCourse?.lessionQuantity || "",
+      lessonQuantity: freeCourse?.lessonQuantity || "",
+      categoryId: freeCourse?.categoryId || 0,
+      type: freeCourse?.type || ""
     },
     validationSchema: schema,
     onSubmit: (values) => {
+      const data = {
+        ...values,
+        categoryId: Number(values.categoryId),
+      };
       if (getFreeCourseId !== undefined) {
-        const data = { id: getFreeCourseId, freeCourseData: values };
-        dispatch(updateFreeCourse(data))
+        const updateData = { id: getFreeCourseId, freeCourseData: data };
+        dispatch(updateFreeCourse(updateData))
           .unwrap()
           .then(() => {
             toast.success("Free course updated successfully");
@@ -66,8 +73,7 @@ const AddFreeCourse = () => {
             }
           });
       } else {
-        // console.log("Values data:", values);
-        dispatch(createFreeCourse(values))
+        dispatch(createFreeCourse(data))
           .unwrap()
           .then(() => {
             toast.success("Free course created successfully");
@@ -89,7 +95,7 @@ const AddFreeCourse = () => {
 
   useEffect(() => {
     dispatch(getAllCategory());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>
@@ -145,16 +151,16 @@ const AddFreeCourse = () => {
 
           <CustomInput
             type="number"
-            label="Lession Quantity"
-            name="lessionQuantity"
-            id="lessionQuantity"
-            onCh={formik.handleChange("lessionQuantity")}
-            onBl={formik.handleBlur("lessionQuantity")}
-            val={formik.values.lessionQuantity}
+            label="Lesson Quantity"
+            name="lessonQuantity"
+            id="lessonQuantity"
+            onCh={formik.handleChange("lessonQuantity")}
+            onBl={formik.handleBlur("lessonQuantity")}
+            val={formik.values.lessonQuantity}
           />
           <div className="error">
-            {formik.touched.lessionQuantity && formik.errors.lessionQuantity ? (
-              <div>{formik.errors.lessionQuantity}</div>
+            {formik.touched.lessonQuantity && formik.errors.lessonQuantity ? (
+              <div>{formik.errors.lessonQuantity}</div>
             ) : null}
           </div>
           <br />

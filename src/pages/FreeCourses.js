@@ -25,7 +25,7 @@ const FreeCourses = () => {
     },
     {
       title: "Lession Quantity",
-      dataIndex: "lessionQuantity",
+      dataIndex: "lessonQuantity",
     },
     {
       title: "CategoryId",
@@ -46,13 +46,13 @@ const FreeCourses = () => {
   }, [dispatch]);
   const freeCourseState = useSelector((state) => state.freeCourse.freeCourses.data);
   const data = [];
-  for (let i = 0; i < freeCourseState.length; i++) {
+  for (let i = 0; i < freeCourseState?.length; i++) {
     data.push({
       key: i + 1,
       name: freeCourseState[i]?.name,
       description: freeCourseState[i]?.description,
       thumbnail: freeCourseState[i]?.thumbnail,
-      lessionQuantity: freeCourseState[i]?.lessionQuantity,
+      lessonQuantity: freeCourseState[i]?.lessonQuantity,
       categoryId: freeCourseState[i]?.categoryId,
       type: freeCourseState[i]?.type,
       action: (

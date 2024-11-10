@@ -12,14 +12,7 @@ const getAllFreeCourse = async () => {
 const createFreeCourse = async (freeCourse) => {
   const response = await axios.post(
     process.env.REACT_APP_BASE_URL + `courses/free`,
-    {
-        name: freeCourse.freeCourseData.name,
-        description: freeCourse.freeCourseData.description,
-        thumbnail: freeCourse.freeCourseData.thumbnail,
-        categoryId: freeCourse.freeCourseData.category,
-        lessionQuantity: freeCourse.freeCourseData.lessionQuantity,
-        type: freeCourse.freeCourseData.type,
-    },
+    freeCourse,
     config
   );
   return response.data;
@@ -33,7 +26,7 @@ const updateFreeCourse = async (freeCourse) => {
         description: freeCourse.freeCourseData.description,
         thumbnail: freeCourse.freeCourseData.thumbnail,
         categoryId: freeCourse.freeCourseData.category,
-        lessionQuantity: freeCourse.freeCourseData.lessionQuantity,
+        lessonQuantity: freeCourse.freeCourseData.lessonQuantity,
     },
     config
   );
