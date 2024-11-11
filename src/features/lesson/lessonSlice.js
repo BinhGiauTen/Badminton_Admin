@@ -47,7 +47,7 @@ export const updateFreeLesson = createAsyncThunk(
 );
 
 export const deleteFreeLesson = createAsyncThunk(
-    "lesson/update-free-lesson",
+    "lesson/delete-free-lesson",
     async (freeLessonId, thunkAPI) => {
       try {
         return await lessonService.deleteFreeLesson(freeLessonId);

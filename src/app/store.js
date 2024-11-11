@@ -5,6 +5,7 @@ import userReducer from "../features/user/userSlice";
 import adminReducer from "../features/admin/adminSlice";
 import categoryReducer from "../features/category/categorySlice";
 import freeCourseReducer from "../features/freeCourse/freeCourseSlice";
+import lessonReducer from "../features/lesson/lessonSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -13,5 +14,6 @@ export const store = configureStore({
     admin: adminReducer,
     category: categoryReducer,
     freeCourse: freeCourseReducer,
+    lesson: lessonReducer,
   },
 });
