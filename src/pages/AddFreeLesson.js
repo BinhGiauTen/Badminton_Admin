@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import CustomInput from "../components/CustomInput";
-import TipTap from "../components/TipTap";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import * as yup from "yup";
@@ -13,13 +11,29 @@ import {
   updateFreeLesson,
 } from "../features/lesson/lessonSlice";
 import { getAllFreeCourse } from "../features/freeCourse/freeCourseSlice";
+import EditorJS from "../components/Editor";
 
 let schema = yup.object().shape({
   content: yup.mixed().required("Content is required"),
   freeCourseId: yup.number().required("Free Course Id is required"),
 });
 
+const INITIAL_DATA = {
+  time: new Date().getTime(),
+  blocks: [
+    {
+      "type": "header",
+      "data": {
+        "text": "Enter your lesson you need to add",
+        "level": 2
+      }
+    }
+  ]
+};
+
 const AddFreeLesson = () => {
+  const [data, setData] = useState(INITIAL_DATA);
+
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,8 +59,8 @@ const AddFreeLesson = () => {
     validationSchema: schema,
     onSubmit: (values) => {
       const data = {
-        ...values,
         freeCourseId: Number(values.freeCourseId),
+        content: values.content || INITIAL_DATA,
       };
       if (getFreeLessonId !== undefined) {
         const updateData = { id: getFreeLessonId, freeLessonData: data };
@@ -68,6 +82,7 @@ const AddFreeLesson = () => {
             }
           });
       } else {
+        console.log("Data:", data);
         dispatch(createFreeLesson(data))
           .unwrap()
           .then(() => {
@@ -99,25 +114,12 @@ const AddFreeLesson = () => {
       </h3>
       <div className="">
         <form action="" onSubmit={formik.handleSubmit}>
-
-          {/* <CustomInput
-            type="content"
-            label="Free Lesson Content"
-            name="content"
-            id="content"
-            onCh={formik.handleChange("content")}
-            onBl={formik.handleBlur("content")}
-            val={formik.values.content}
-          />
-          <div className="error">
-            {formik.touched.content && formik.errors.content ? (
-              <div>{formik.errors.content}</div>
-            ) : null}
-          </div>
-          <br /> */}
-
-          <div className="card">
-            <TipTap onChange={(value) => formik.setFieldValue("content", value)}/>
+          <div className="editor">
+            <EditorJS
+              data={data}
+              onChange={(value) => formik.setFieldValue("content", value)}
+              editorBlock="editorjs-container"
+            />
           </div>
           <br />
 

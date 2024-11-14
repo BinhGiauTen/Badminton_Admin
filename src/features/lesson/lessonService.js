@@ -37,10 +37,22 @@ const deleteFreeLesson = async (freeLessonId) => {
     return response.data;
   };
 
+const uploadImageFreeLesson = async (file) => {
+  const formData = new FormData();
+  formData.append("image", file);
+  const response = await axios.patch(
+    process.env.REACT_APP_BASE_URL + `lessons/free/image`,
+    formData,
+    config
+  );
+  return response.data;
+};
+
 const lessonService = {
   createFreeLesson,
   updateFreeLesson,
   getAFreeLesson,
-  deleteFreeLesson
+  deleteFreeLesson,
+  uploadImageFreeLesson
 };
 export default lessonService;

@@ -41,10 +41,19 @@ const getAFreeCourse = async (freeCourseId) => {
   return response.data;
 };
 
+const deleteFreeCourse = async (freeCourseId) => {
+  const response = await axios.delete(
+    process.env.REACT_APP_BASE_URL + `courses/free/${freeCourseId}`,
+    config
+  );
+  return response.data;
+};
+
 const freeCourseService = {
   createFreeCourse,
   getAllFreeCourse,
   updateFreeCourse,
   getAFreeCourse,
+  deleteFreeCourse
 };
 export default freeCourseService;

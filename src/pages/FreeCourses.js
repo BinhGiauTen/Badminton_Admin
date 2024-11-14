@@ -1,11 +1,24 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
-import { getAllFreeCourse } from "../features/freeCourse/freeCourseSlice";
+import { deleteFreeCourse, getAllFreeCourse } from "../features/freeCourse/freeCourseSlice";
+import CustomModal from "../components/CustomModal";
+import { AiFillDelete } from "react-icons/ai";
+
 
 const FreeCourses = () => {
+  const [open, setOpen] = useState(false);
+  const [freeCourseId, setFreeCourseId] = useState("");
+  const showModal = (e) => {
+    setFreeCourseId(e);
+    setOpen(true);
+  };
+  const hideModal = () => {
+    setOpen(false);
+  };
+
   const columns = [
     {
       title: "SNo",
@@ -63,24 +76,40 @@ const FreeCourses = () => {
           >
             <BiEdit />
           </Link>
+          <button
+            className="ms-2 fs-3 text-danger bg-transparent border-0"
+            onClick={() => showModal(freeCourseState[i].id)}
+          >
+            <AiFillDelete />
+          </button>
         </>
       ),
     });
   }
+
+  const handleDeleteFreeCourse = (e) => {
+    dispatch(deleteFreeCourse(e));
+    setOpen(false);
+    setTimeout(() => {
+      dispatch(getAllFreeCourse());
+    }, 100);
+  };
+
+
   return (
     <>
       <h3 className="mb-4 title">Free Courses</h3>
       <div>
         <Table columns={columns} dataSource={data} />
       </div>
-      {/* <CustomModal
+      <CustomModal
         hideModal={hideModal}
         open={open}
         performAction={() => {
-          delCoach(coachId);
+          handleDeleteFreeCourse(freeCourseId);
         }}
-        title="Are you sure you want to delete this coach"
-      /> */}
+        title="Are you sure you want to delete this free course"
+      />
     </>
   );
 };

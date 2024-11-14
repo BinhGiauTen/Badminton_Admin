@@ -90,3 +90,8 @@
 .profile:hover{
   cursor: pointer;
 }
+
+/* editorjs */
+.codex-editor__redactor{
+  border: 1px solid #ccc;
+}

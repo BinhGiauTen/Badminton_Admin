@@ -57,6 +57,18 @@ export const updateFreeCourse = createAsyncThunk(
   }
 );
 
+export const deleteFreeCourse = createAsyncThunk(
+  "course/delete-free-course",
+  async (freeCourseId, thunkAPI) => {
+    try {
+      return await freeCourseService.deleteFreeCourse(freeCourseId);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const resetState = createAction("Reset_all");
 
 export const freeCourseSlice = createSlice({
@@ -120,6 +132,21 @@ export const freeCourseSlice = createSlice({
         state.createdFreeCourse = action.payload;
       })
       .addCase(createFreeCourse.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(deleteFreeCourse.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteFreeCourse.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.deletedFreeCourse = action.payload;
+      })
+      .addCase(deleteFreeCourse.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

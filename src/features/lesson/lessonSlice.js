@@ -58,6 +58,17 @@ export const deleteFreeLesson = createAsyncThunk(
     }
   );
 
+  export const uploadImageFreeLesson = createAsyncThunk(
+    "lesson/upload-image-free-lesson",
+    async (file, thunkAPI) => {
+      try {
+        return await lessonService.uploadImageFreeLesson(file);
+      } catch (error) {
+        return thunkAPI.rejectWithValue(error);
+      }
+    }
+  );
+
 export const resetState = createAction("Reset_all");
 
 export const lessonSlice = createSlice({
@@ -121,6 +132,21 @@ export const lessonSlice = createSlice({
         state.deletedFreeLesson = action.payload;
       })
       .addCase(deleteFreeLesson.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(uploadImageFreeLesson.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadImageFreeLesson.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.uploaddImageFreeLesson = action.payload;
+      })
+      .addCase(uploadImageFreeLesson.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
