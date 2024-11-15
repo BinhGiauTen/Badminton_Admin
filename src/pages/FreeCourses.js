@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Table, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
@@ -31,10 +31,23 @@ const FreeCourses = () => {
     {
       title: "Description",
       dataIndex: "description",
+      render: (text) => (
+        <Tooltip title={text}>
+          {text.length > 40 ? `${text.slice(0, 40)}...` : text}
+        </Tooltip>
+      ),
     },
     {
       title: "Thumbnail",
       dataIndex: "thumbnail",
+      // render: (url) => (
+      //   <img src={url} alt="thumbnail" style={{ maxWidth: "80px", maxHeight: "80px" }} />
+      // ),
+      render: (text) => (
+        <Tooltip title={text}>
+          {text.length > 40 ? `${text.slice(0, 40)}...` : text}
+        </Tooltip>
+      ),
     },
     {
       title: "Lession Quantity",
@@ -51,6 +64,7 @@ const FreeCourses = () => {
     {
       title: "Action",
       dataIndex: "action",
+      width: "150px",
     },
   ];
   const dispatch = useDispatch();

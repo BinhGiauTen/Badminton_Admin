@@ -22,18 +22,16 @@ const INITIAL_DATA = {
   time: new Date().getTime(),
   blocks: [
     {
-      "type": "header",
-      "data": {
-        "text": "Enter your lesson you need to add",
-        "level": 2
-      }
-    }
-  ]
+      type: "header",
+      data: {
+        text: "Enter your lesson you need to add",
+        level: 2,
+      },
+    },
+  ],
 };
 
 const AddFreeLesson = () => {
-  const [data, setData] = useState(INITIAL_DATA);
-
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,24 +41,17 @@ const AddFreeLesson = () => {
   );
   const freeLesson = useSelector((state) => state.lesson.freeLesson);
 
-  useEffect(() => {
-    if (getFreeLessonId !== undefined) {
-      dispatch(getAFreeLesson(getFreeLessonId));
-    } else {
-      dispatch(resetState());
-    }
-  }, [dispatch, getFreeLessonId]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      content: freeLesson?.content || "",
+      content: freeLesson?.content || INITIAL_DATA,
       freeCourseId: freeLesson?.freeCourseId || 0,
     },
     validationSchema: schema,
     onSubmit: (values) => {
       const data = {
         freeCourseId: Number(values.freeCourseId),
-        content: values.content || INITIAL_DATA,
+        content: values.content,
       };
       if (getFreeLessonId !== undefined) {
         const updateData = { id: getFreeLessonId, freeLessonData: data };
@@ -116,7 +107,7 @@ const AddFreeLesson = () => {
         <form action="" onSubmit={formik.handleSubmit}>
           <div className="editor">
             <EditorJS
-              data={data}
+              data={formik.values.content}  
               onChange={(value) => formik.setFieldValue("content", value)}
               editorBlock="editorjs-container"
             />
@@ -152,4 +143,5 @@ const AddFreeLesson = () => {
     </>
   );
 };
+
 export default AddFreeLesson;

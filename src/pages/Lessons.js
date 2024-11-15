@@ -38,7 +38,7 @@ const Lessons = () => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAFreeLesson(2));
+    dispatch(getAFreeLesson(15));
   }, [dispatch]);
   const freeLessonState = useSelector((state) => state.lesson?.freeLesson);
 

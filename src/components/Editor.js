@@ -16,7 +16,6 @@ import ImageTool from "@editorjs/image";
 import { useDispatch } from "react-redux";
 import { uploadImageFreeLesson } from "../features/lesson/lessonSlice";
 
-
 const Editor = ({ data, onChange, editorBlock }) => {
   const dispatch = useDispatch();
   const ref = useRef();
@@ -26,87 +25,90 @@ const Editor = ({ data, onChange, editorBlock }) => {
       const editor = new EditorJS({
         holder: editorBlock,
         data: data,
-        tools: {textAlignment: {
-          class: AlignmentBlockTune,
-          config: {
-            default: "left",
-            blocks: {
-              header: "center",
-            },
-          },
-        },
-        paragraph: {
-          class: Paragraph,
-          tunes: ["textAlignment"],
-        },
-        header: {
-          class: Header,
-          inlineToolbar: true,
-          tunes: ["textAlignment"],
-          config: {
-            placeholder: "Enter a Header",
-            levels: [1, 2, 3, 4, 5],
-            defaultLevel: 2,
-          },
-        },
-        list: {
-          class: List,
-          config: {
-            defaultStyle: "unordered",
-          },
-        },
-        checklist: {
-          class: Checklist,
-        },
-        image: {
-          class: ImageTool,
-          config: {
-            uploader: {
-              uploadByFile(file) {
-                return dispatch(uploadImageFreeLesson(file)).then((response) => {
-                  if (response) {
-                    console.log("Response:", response.payload.data);
-                    return {
-                      success: 1,
-                      file: {
-                        url: response.payload.data,
-                      },
-                    };
-                  } else {
-                    return { success: 0 }; 
-                  }
-                });
+        tools: {
+          textAlignment: {
+            class: AlignmentBlockTune,
+            config: {
+              default: "left",
+              blocks: {
+                header: "center",
               },
             },
           },
-        },
-        embed: {
-          class: Embed,
-          config: {
-            services: {
-              youtube: true,
-              codepen: true,
+          paragraph: {
+            class: Paragraph,
+            tunes: ["textAlignment"],
+          },
+          header: {
+            class: Header,
+            inlineToolbar: true,
+            tunes: ["textAlignment"],
+            config: {
+              placeholder: "Enter a Header",
+              levels: [1, 2, 3, 4, 5],
+              defaultLevel: 2,
             },
           },
+          list: {
+            class: List,
+            config: {
+              defaultStyle: "unordered",
+            },
+          },
+          checklist: {
+            class: Checklist,
+          },
+          image: {
+            class: ImageTool,
+            config: {
+              uploader: {
+                uploadByFile(file) {
+                  return dispatch(uploadImageFreeLesson(file)).then(
+                    (response) => {
+                      if (response) {
+                        return {
+                          success: 1,
+                          file: {
+                            url: response.payload.data,
+                          },
+                        };
+                      } else {
+                        return { success: 0 };
+                      }
+                    }
+                  );
+                },
+              },
+            },
+          },
+          embed: {
+            class: Embed,
+            config: {
+              services: {
+                youtube: true,
+                codepen: true,
+              },
+            },
+          },
+          underline: {
+            class: Underline,
+          },
+          strikethrough: {
+            class: Strikethrough,
+          },
+          Marker: {
+            class: Marker,
+          },
+          inlineCode: {
+            class: InlineCode,
+          },
+          changeCase: {
+            class: ChangeCase,
+          },
         },
-        underline: {
-          class: Underline,
-        },
-        strikethrough: {
-          class: Strikethrough,
-        },
-        Marker: {
-          class: Marker,
-        },
-        inlineCode: {
-          class: InlineCode,
-        },
-        changeCase: {
-          class: ChangeCase,
-        },},
         async onChange(api, event) {
           const savedData = await api.saver.save();
-          onChange(data)
+          onChange(savedData); 
         },
       });
       ref.current = editor;
