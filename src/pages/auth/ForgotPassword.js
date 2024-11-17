@@ -1,6 +1,6 @@
 import React from "react";
 import CustomInput from "../../components/CustomInput";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { forgotPassword } from "../../features/auth/authSlice";
 import { useFormik } from "formik";
@@ -11,6 +11,8 @@ import { ColorAccent } from "../../constant/Color";
 const Forgotpassword = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const location = useLocation();
+  const role = location.state?.role;
 
   const schema = Yup.object().shape({
     email: Yup.string()
@@ -25,7 +27,7 @@ const Forgotpassword = () => {
     onSubmit: (values) => {
       const data = {
         email: values.email,
-        role: "admin",
+        role: role,
       };
       dispatch(forgotPassword(data))
         .unwrap()
@@ -34,7 +36,7 @@ const Forgotpassword = () => {
             "If your email is registered, you will receive a link to reset your password shortly."
           );
           navigate("/reset-password", {
-            state: { email: formik.values.email },
+            state: { email: formik.values.email, role: role },
           });
         })
         .catch((error) => {
@@ -57,7 +59,12 @@ const Forgotpassword = () => {
     <>
       <div
         className="py-5"
-        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
+        style={{
+          backgroundImage: `url('/images/bg.webp')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+        }}
       >
         <br />
         <br />

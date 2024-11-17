@@ -4,10 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
-import { login } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { passwordRegex, usernameRegex } from "../../constant/Regex";
 import { ColorAccent } from "../../constant/Color";
+import { adminRegister } from "../../features/admin/adminSlice";
+import { coachRegister } from "../../features/coach/coachSlice";
 
 const Register = () => {
   const [role, setRole] = useState("admin");
@@ -45,14 +46,60 @@ const Register = () => {
         role: role,
       };
       console.log("Register Data:", registerData);
+      if(role === "admin"){
+        dispatch(adminRegister(registerData))
+        .unwrap()
+        .then(() => {
+          toast.success("Admin created successfully");
+          navigate("/login");
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 400") {
+            toast.error("Admin with this email have already exist");
+          } else if (error === "Network Error") {
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+      }else {
+        dispatch(coachRegister(registerData))
+        .unwrap()
+        .then(() => {
+          toast.success("Coach created successfully");
+          navigate("/login");
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 400") {
+            toast.error("Coach with this email have already exist");
+          } else if (error === "Network Error") {
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+      }
     },
   });
+
+  const toggleRole = () => {
+    setRole((prevRole) => (prevRole === "admin" ? "coach" : "admin"));
+  };
 
   return (
     <>
       <div
         className=""
-        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
+        style={{
+          backgroundImage: `url('/images/bg.webp')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+        }}
       >
         <br />
         <br />
@@ -60,7 +107,9 @@ const Register = () => {
         <br />
         <br />
         <div className="w-25 bg-white rounded-3 mx-auto p-4">
-          <h3 className="text-center title">{role === "admin" ? "Admin Register" : "Coach Register"}</h3>
+          <h3 className="text-center title">
+            {role === "admin" ? "Admin Register" : "Coach Register"}
+          </h3>
           <p className="text-center">Login to your account to continue.</p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
@@ -112,23 +161,15 @@ const Register = () => {
                 <div>{formik.errors.password}</div>
               ) : null}
             </div>
-            <CustomInput
-              name="confirmPassword"
-              label="Confirm Password"
-              id="confirmPassword"
-              val={formik.values.confirmPassword}
-              onCh={formik.handleChange("confirmPassword")}
-              secure={true}
-            />
-            <div className="error">
-              {formik.touched.confirmPassword &&
-              formik.errors.confirmPassword ? (
-                <div>{formik.errors.confirmPassword}</div>
-              ) : null}
-            </div>
             <div className="d-flex my-2 align-items-center justify-content-between">
-              <div>
-                <div className="text-primary text-decoration-underline">Register as coach</div>
+              <div className="as-coach">
+                <div
+                  style={{ color: ColorAccent.primary }}
+                  className="text-decoration-underline"
+                  onClick={toggleRole}
+                >
+                  Register as {role === "admin" ? "coach" : "admin"}
+                </div>
               </div>
               <div>
                 <Link to="/login">Login</Link>
@@ -140,8 +181,12 @@ const Register = () => {
               style={{ background: ColorAccent.primary }}
               type="submit"
             >
-              Register{" "}
+              {role === "admin" ? "Admin Register" : "Coach Register"}
             </button>
+            <br/>
+            <div className="text-center">
+              <Link to="/forgot-password">Forgot Password</Link>
+            </div>
           </form>
         </div>
       </div>

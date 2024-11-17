@@ -1,4 +1,5 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
+import adminService from "./adminService";
 
 
 const initialState = {
@@ -9,19 +10,41 @@ const initialState = {
   message: "",
 };
 
-export const loadUserFromSecureStore = createAsyncThunk(
-  "admin/load-admin-from-localStorage",
-  async (_, thunkAPI) => {
+export const adminRegister = createAsyncThunk(
+  "admin/admin-register",
+  async (user, thunkAPI) => {
     try {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
+      return await adminService.adminRegister(user);
     } catch (error) {
-      const message = error.message || "Failed to load admin";
+      const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
+export const getAllUser = createAsyncThunk(
+  "admin/get-all-user",
+  async (thunkAPI) => {
+    try {
+      return await adminService.getAllUser();
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const deleteUser = createAsyncThunk(
+  "admin/del-a-user",
+  async (id, thunkAPI) => {
+    try {
+      return await adminService.deleteUser(id);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+export const resetState = createAction("Reset_all");
 
 export const adminSlice = createSlice({
   name: "admin",
@@ -29,19 +52,53 @@ export const adminSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(loadUserFromSecureStore.pending, (state) => {
+    .addCase(adminRegister.pending, (state) => {
       state.isLoading = true;
     })
-    .addCase(loadUserFromSecureStore.fulfilled, (state, action) => {
+    .addCase(adminRegister.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.isError = false;
       state.isSuccess = true;
-      state.admin = action.payload;
+      state.createdUser = action.payload;
     })
-    .addCase(loadUserFromSecureStore.rejected, (state, action) => {
+    .addCase(adminRegister.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
+      state.isSuccess = false;
       state.message = action.payload;
     })
+    .addCase(getAllUser.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.users = action.payload;
+    })
+    .addCase(getAllUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+    .addCase(deleteUser.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(deleteUser.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.deletedUser = action.payload;
+    })
+    .addCase(deleteUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+
+    .addCase(resetState, () => initialState);
   },
 });
 

@@ -9,6 +9,18 @@ const initialState = {
   message: "",
 };
 
+export const coachRegister = createAsyncThunk(
+  "coach/coach-register",
+  async (user, thunkAPI) => {
+    try {
+      return await coachService.coachRegister(user);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getAllCoach = createAsyncThunk(
   "coach/get-all-coach",
   async (thunkAPI) => {
@@ -39,6 +51,21 @@ export const coachSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    .addCase(coachRegister.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(coachRegister.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.createdUser = action.payload;
+    })
+    .addCase(coachRegister.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.payload;
+    })
       .addCase(getAllCoach.pending, (state) => {
         state.isLoading = true;
       })

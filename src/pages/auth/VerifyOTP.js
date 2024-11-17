@@ -17,6 +17,7 @@ const VerifyOTP = () => {
 
   const location = useLocation();
   const email = location.state?.email;
+  const role = location.state?.role;
 
   const schema = Yup.object().shape({
     otp: Yup.string()
@@ -33,7 +34,7 @@ const VerifyOTP = () => {
       const data = {
         ...values,
         email: email,
-        role: "admin",
+        role: role,
       };
       dispatch(verifyOTP(data)).unwrap()
       .then((userState) => {
@@ -62,7 +63,12 @@ const VerifyOTP = () => {
     <>
       <div
         className="py-5"
-        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
+        style={{
+          backgroundImage: `url('/images/bg.webp')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          minHeight: '100vh',
+        }}
       >
         <br />
         <br />

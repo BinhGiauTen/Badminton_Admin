@@ -3,7 +3,7 @@ import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete } from "react-icons/ai";
 import CustomModal from "../components/CustomModal";
-import { deleteUser, getAllUser, resetState } from "../features/user/userSlice";
+import { deleteUser, getAllUser, resetState } from "../features/admin/adminSlice";
 
 const Users = () => {
   const [open, setOpen] = useState(false);
@@ -21,8 +21,12 @@ const Users = () => {
       dataIndex: "key",
     },
     {
-      title: "User Name",
-      dataIndex: "user_name",
+      title: "First Name",
+      dataIndex: "first_name",
+    },
+    {
+      title: "Last Name",
+      dataIndex: "last_name",
     },
     {
       title: "Email",
@@ -43,23 +47,24 @@ const Users = () => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
+    // dispatch(resetState());
     dispatch(getAllUser());
   }, [dispatch]);
-  const userState = useSelector((state) => state.user.users);
+  const userState = useSelector((state) => state?.admin?.users);
   const data = [];
-  for (let i = 0; i < userState.length; i++) {
+  for (let i = 0; i < userState?.length; i++) {
     data.push({
       key: i + 1,
-      user_name: userState[i].user_name,
-      email: userState[i].email,
-      dob: userState[i].dob,
-      gender: userState[i].gender,
+      first_name: userState[i]?.first_name,
+      last_name: userState[i]?.last_name,
+      email: userState[i]?.email,
+      dob: userState[i]?.dob,
+      gender: userState[i]?.gender,
       action: (
         <>
           <button
             className="ms-2 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(userState[i].id)}
+            onClick={() => showModal(userState[i]?.id)}
           >
             <AiFillDelete />
           </button>

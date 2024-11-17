@@ -15,8 +15,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
 import { toast } from "react-toastify";
-import { loadUserFromSecureStore } from "../features/admin/adminSlice";
 import AuthContext from "../context/AuthContext";
+import { loadUserFromSecureStore } from "../features/user/userSlice";
 
 const { Header, Sider, Content } = Layout;
 
@@ -49,11 +49,12 @@ const MainLayout = () => {
       });
   };
 
-  const adminState = useSelector((state) => state?.admin?.admin);
+  const userState = useSelector((state) => state?.user?.user);
+  console.log("user state:", userState);
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
-  }, [dispatch]);
+  }, []);
 
   return (
     <Layout>
@@ -61,7 +62,7 @@ const MainLayout = () => {
         <div className="demo-logo-vertical" />
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="lg-logo">Badminton Admin</span>
+            <span className="lg-logo">Badminton {userState?.role === "admin" ? "Admin" : "Coach" }</span>
             <span className="sm-logo">BA</span>
           </h2>
         </div>
@@ -81,16 +82,20 @@ const MainLayout = () => {
               icon: <AiOutlineDashboard className="fs-4" />,
               label: "Dashboard",
             },
-            {
-              key: "coaches",
-              icon: <AiOutlineUserAdd className="fs-4" />,
-              label: "Coaches",
-            },
-            {
-              key: "users",
-              icon: <FaClipboardList className="fs-4" />,
-              label: "Users",
-            },
+            ...(userState?.role === "admin"
+              ? [
+                  {
+                    key: "coaches",
+                    icon: <AiOutlineUserAdd className="fs-4" />,
+                    label: "Coaches",
+                  },
+                  {
+                    key: "users",
+                    icon: <FaClipboardList className="fs-4" />,
+                    label: "Users",
+                  },
+                ]
+              : []),
             {
               key: "free-course-list",
               icon: <FaBloggerB className="fs-4" />,
@@ -186,9 +191,9 @@ const MainLayout = () => {
                 aria-expanded="false"
               >
                 <h6 className="mb-0">
-                  {adminState?.firstName} {adminState?.lastName}
+                  {userState?.firstName} {userState?.lastName}
                 </h6>
-                <p className="mb-0">{adminState?.email}</p>
+                <p className="mb-0">{userState?.email}</p>
               </div>
               <ul
                 className="dropdown-menu"

@@ -9,17 +9,14 @@ const initialState = {
   message: "",
 };
 
-export const login = createAsyncThunk(
-  "auth/admin-login",
-  async (user, thunkAPI) => {
-    try {
-      return await authService.login(user);
-    } catch (error) {
-      const message = error.message || "Network Error";
-      return thunkAPI.rejectWithValue(message);
-    }
+export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
+  try {
+    return await authService.login(user);
+  } catch (error) {
+    const message = error.message || "Network Error";
+    return thunkAPI.rejectWithValue(message);
   }
-);
+});
 
 export const forgotPassword = createAsyncThunk(
   "auth/forgot-password",
@@ -57,7 +54,7 @@ export const verifyOTP = createAsyncThunk(
   }
 );
 
-export const logout = createAsyncThunk("auth/logout", async (_,thunkAPI) => {
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
     return await authService.logout();
   } catch (error) {
@@ -65,7 +62,6 @@ export const logout = createAsyncThunk("auth/logout", async (_,thunkAPI) => {
     return thunkAPI.rejectWithValue(message);
   }
 });
-
 
 export const authSlice = createSlice({
   name: "auth",
@@ -147,7 +143,7 @@ export const authSlice = createSlice({
         state.isError = true;
         state.isSuccess = false;
         state.message = action.payload;
-      })
+      });
   },
 });
 
