@@ -45,7 +45,7 @@ const Categories = () => {
         <>
           <Link
             className="ms-2 fs-3 text-danger bg-transparent border-0"
-            to={`/category/${categoryState[i]?.id}`}
+            to={`/dashboard/category/${categoryState[i]?.id}`}
           >
             <BiEdit />
           </Link>

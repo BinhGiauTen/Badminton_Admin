@@ -7,6 +7,7 @@ import { useDispatch } from "react-redux";
 import { login } from "../../features/auth/authSlice";
 import { toast } from "react-toastify";
 import { passwordRegex } from "../../constant/Regex";
+import { ColorAccent } from "../../constant/Color";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -62,7 +63,7 @@ const Login = () => {
     <>
       <div
         className="py-5"
-        style={{ background: "#ffd333", minHeight: "100vh" }}
+        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
       >
         <br />
         <br />
@@ -74,7 +75,6 @@ const Login = () => {
           <p className="text-center">Login to your account to continue.</p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
-              type="text"
               name="email"
               label="Email Address"
               id="email"
@@ -87,12 +87,12 @@ const Login = () => {
               ) : null}
             </div>
             <CustomInput
-              type="password"
               name="password"
               label="Password"
               id="pass"
               val={formik.values.password}
               onCh={formik.handleChange("password")}
+              secure={true}
             />
             <div className="error">
               {formik.touched.password && formik.errors.password ? (
@@ -104,7 +104,7 @@ const Login = () => {
             </div>
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100 text-center text-decoration-none fs-5"
-              style={{ background: "#ffd333" }}
+              style={{ background: ColorAccent.primary }}
               type="submit"
             >
               Login{" "}

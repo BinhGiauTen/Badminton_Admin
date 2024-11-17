@@ -25,7 +25,7 @@ const AddFreeCourse = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const getFreeCourseId = location.pathname.split("/")[2];
+  const getFreeCourseId = location.pathname.split("/")[3];
   const categoryState = useSelector((state) => state.category.categories);
   const freeCourse = useSelector((state) => state.freeCourse.freeCourse);
   console.log("FreeCourse:", freeCourse);

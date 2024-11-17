@@ -1,11 +1,12 @@
 import React from "react";
 import CustomInput from "../../components/CustomInput";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { forgotPassword } from "../../features/auth/authSlice";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+import { ColorAccent } from "../../constant/Color";
 
 const Forgotpassword = () => {
   const navigate = useNavigate();
@@ -56,7 +57,7 @@ const Forgotpassword = () => {
     <>
       <div
         className="py-5"
-        style={{ background: "#ffd333", minHeight: "100vh" }}
+        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
       >
         <br />
         <br />
@@ -66,11 +67,10 @@ const Forgotpassword = () => {
         <div className="my-5 w-25 bg-white rounded-3 mx-auto p-4">
           <h3 className="text-center title">Forgot password</h3>
           <p className="text-center">
-            Please enter your register email to get reset password mail.
+            Please enter your register email to get OTP reset password.
           </p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
-              type="text"
               label="Email Address"
               id="email"
               name="email"
@@ -82,10 +82,12 @@ const Forgotpassword = () => {
                 <div>{formik.errors.email}</div>
               ) : null}
             </div>
-            <br />
+            <div className="mb-3 text-end">
+              <Link to="/login">Back to login</Link>
+            </div>
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100"
-              style={{ background: "#ffd333" }}
+              style={{ background: ColorAccent.primary }}
               type="submit"
             >
               Send link

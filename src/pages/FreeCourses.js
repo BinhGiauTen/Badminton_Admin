@@ -86,7 +86,7 @@ const FreeCourses = () => {
         <>
           <Link
             className="ms-2 fs-3 text-danger bg-transparent border-0"
-            to={`/free-course/${freeCourseState[i]?.id}`}
+            to={`/dashboard/free-course/${freeCourseState[i]?.id}`}
           >
             <BiEdit />
           </Link>

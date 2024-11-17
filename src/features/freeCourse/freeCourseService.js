@@ -3,7 +3,7 @@ import { config } from "../../utils/axiosconfig";
 
 const getAllFreeCourse = async () => {
   const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `courses/free`,
+    process.env.REACT_APP_BASE_URL + `free-courses`,
     config
   );
   return response.data;
@@ -11,7 +11,7 @@ const getAllFreeCourse = async () => {
 
 const createFreeCourse = async (freeCourse) => {
   const response = await axios.post(
-    process.env.REACT_APP_BASE_URL + `courses/free`,
+    process.env.REACT_APP_BASE_URL + `free-courses`,
     freeCourse,
     config
   );
@@ -20,7 +20,7 @@ const createFreeCourse = async (freeCourse) => {
 
 const updateFreeCourse = async (freeCourse) => {
   const response = await axios.patch(
-    process.env.REACT_APP_BASE_URL + `courses/free/${freeCourse.id}`,
+    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourse.id}`,
     {
         name: freeCourse.freeCourseData.name,
         description: freeCourse.freeCourseData.description,
@@ -35,7 +35,7 @@ const updateFreeCourse = async (freeCourse) => {
 
 const getAFreeCourse = async (freeCourseId) => {
   const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `courses/free/${freeCourseId}`,
+    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`,
     config
   );
   return response.data;
@@ -43,7 +43,7 @@ const getAFreeCourse = async (freeCourseId) => {
 
 const deleteFreeCourse = async (freeCourseId) => {
   const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `courses/free/${freeCourseId}`,
+    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`,
     config
   );
   return response.data;

@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 import { verifyOTP } from "../../features/auth/authSlice";
 import AuthContext from "../../context/AuthContext";
+import { ColorAccent } from "../../constant/Color";
 
 
 const VerifyOTP = () => {
@@ -39,8 +40,7 @@ const VerifyOTP = () => {
         console.log("User state in otp:", userState);
         storeAuthData(userState?.data?.user, userState?.data?.token);
         toast.success("You have been login successfully.")
-        navigate("/");
-
+        navigate("/dashboard");
       })
       .catch((error) => {
         if (error === "Request failed with status code 400") {
@@ -62,7 +62,7 @@ const VerifyOTP = () => {
     <>
       <div
         className="py-5"
-        style={{ background: "#ffd333", minHeight: "100vh" }}
+        style={{ background: ColorAccent.primary, minHeight: "100vh" }}
       >
         <br />
         <br />
@@ -76,7 +76,6 @@ const VerifyOTP = () => {
           </p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
-              type="text"
               label="OTP Code"
               id="otp"
               name="otp"
@@ -91,7 +90,7 @@ const VerifyOTP = () => {
             <br />
             <button
               className="border-0 px-3 py-2 text-white fw-bold w-100"
-              style={{ background: "#ffd333" }}
+              style={{ background: ColorAccent.primary }}
               type="submit"
             >
               Verify OTP

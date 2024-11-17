@@ -35,6 +35,7 @@ const MainLayout = () => {
       .unwrap()
       .then(() => {
         clearAuthData();
+        navigate("/login");
         toast.success("You have been logged out successfully.");
       })
       .catch((error) => {
@@ -49,7 +50,6 @@ const MainLayout = () => {
   };
 
   const adminState = useSelector((state) => state?.admin?.admin);
-  console.log("Admin state:", adminState);
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());

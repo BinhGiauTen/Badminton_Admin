@@ -18,6 +18,7 @@ import FreeCourses from "./pages/FreeCourses";
 import AddFreeCourse from "./pages/AddFreeCourse";
 import Lessons from "./pages/Lessons";
 import AddFreeLesson from "./pages/AddFreeLesson";
+import Register from "./pages/auth/Register";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -27,7 +28,7 @@ function App() {
       <Router>
         <Routes>
           {user && token ? (
-            <Route path="/" element={<MainLayout />}>
+            <Route path="/dashboard" element={<MainLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="coaches" element={<Coaches />} />
               <Route path="users" element={<Users />} />
@@ -43,10 +44,11 @@ function App() {
             </Route>
           ) : (
             <>
-              <Route index element={<Login />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/verify-otp" element={<VerifyOTP />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+              <Route path="forgot-password" element={<ForgotPassword />} />
+              <Route path="verify-otp" element={<VerifyOTP />} />
+              <Route path="reset-password" element={<ResetPassword />} />
             </>
           )}
         </Routes>

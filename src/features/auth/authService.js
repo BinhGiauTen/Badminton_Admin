@@ -2,7 +2,6 @@ import axios from "axios";
 import { config } from "../../utils/axiosconfig";
 
 const login = async (user) => {
-  console.log(process.env.BASE_URL);
   const response = await axios.post(
     process.env.REACT_APP_BASE_URL + `auth/login`,
     user

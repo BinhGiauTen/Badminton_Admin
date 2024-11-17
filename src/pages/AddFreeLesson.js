@@ -35,7 +35,7 @@ const AddFreeLesson = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const getFreeLessonId = location.pathname.split("/")[2];
+  const getFreeLessonId = location.pathname.split("/")[3];
   const freeCourseState = useSelector(
     (state) => state.freeCourse.freeCourses.data
   );

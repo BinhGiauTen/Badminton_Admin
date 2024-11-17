@@ -20,7 +20,7 @@ const AddCategory = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
-  const getCategoryId = location.pathname.split("/")[2];
+  const getCategoryId = location.pathname.split("/")[3];
   const category = useSelector((state) => state.category.category);
   console.log("Category:", category);
   //   const { isSuccess, isError, isLoading, createdBCategory, bcategoryName, updatedBCategory } = category;
