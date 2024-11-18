@@ -3,7 +3,7 @@ import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete } from "react-icons/ai";
 import CustomModal from "../components/CustomModal";
-import { deleteCoach, getAllCoach, resetState } from "../features/coach/coachSlice";
+import { deleteCoach, getAllCoach } from "../features/admin/adminSlice";
 
 const Coaches = () => {
   const [open, setOpen] = useState(false);
@@ -43,15 +43,15 @@ const Coaches = () => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(resetState());
     dispatch(getAllCoach());
   }, [dispatch]);
-  const coachState = useSelector((state) => state.coach.coaches);
+  const coachState = useSelector((state) => state?.admin?.coaches);
   const data = [];
-  for (let i = 0; i < coachState.length; i++) {
+  for (let i = 0; i < coachState?.length; i++) {
     data.push({
       key: i + 1,
-      user_name: coachState[i].user_name,
+      first_name: coachState[i]?.first_name,
+      last_name: coachState[i]?.last_name,
       email: coachState[i].email,
       dob: coachState[i].dob,
       gender: coachState[i].gender,
@@ -59,7 +59,7 @@ const Coaches = () => {
         <>
           <button
             className="ms-2 fs-3 text-danger bg-transparent border-0"
-            onClick={() => showModal(coachState[i].id)}
+            onClick={() => showModal(coachState[i]?.id)}
           >
             <AiFillDelete />
           </button>

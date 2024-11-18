@@ -24,11 +24,12 @@ export const adminRegister = createAsyncThunk(
 
 export const getAllUser = createAsyncThunk(
   "admin/get-all-user",
-  async (thunkAPI) => {
+  async (_,thunkAPI) => {
     try {
       return await adminService.getAllUser();
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -39,7 +40,56 @@ export const deleteUser = createAsyncThunk(
     try {
       return await adminService.deleteUser(id);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const getAllCoach = createAsyncThunk(
+  "admin/get-all-coach",
+  async (thunkAPI) => {
+    try {
+      return await adminService.getAllCoach();
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const deleteCoach = createAsyncThunk(
+  "admin/del-a-coach",
+  async (id, thunkAPI) => {
+    try {
+      return await adminService.deleteCoach(id);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateAdmin = createAsyncThunk(
+  "admin/update-admin",
+  async (user,thunkAPI) => {
+    try {
+      return await adminService.updateAdmin(user);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const updateAdminAvatar = createAsyncThunk(
+  "admin/update-admin-avatar",
+  async ({id,file},thunkAPI) => {
+    try {
+      return await adminService.updateAdminAvatar(id,file);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -92,6 +142,68 @@ export const adminSlice = createSlice({
       state.deletedUser = action.payload;
     })
     .addCase(deleteUser.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+
+    .addCase(getAllCoach.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAllCoach.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.coaches = action.payload;
+    })
+    .addCase(getAllCoach.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+    .addCase(deleteCoach.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(deleteCoach.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.deletedCoach = action.payload;
+    })
+    .addCase(deleteCoach.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+
+    .addCase(updateAdmin.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(updateAdmin.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.updatedUser = action.payload;
+    })
+    .addCase(updateAdmin.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
+    .addCase(updateAdminAvatar.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(updateAdminAvatar.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.updatedUser = action.payload;
+    })
+    .addCase(updateAdminAvatar.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
       state.isSuccess = false;

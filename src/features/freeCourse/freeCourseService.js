@@ -33,9 +33,28 @@ const updateFreeCourse = async (freeCourse) => {
   return response.data;
 };
 
+const updateFreeCourseThumbnail = async (freeCourseId,file) => {
+  const formData = new FormData();
+  formData.append("image",file);
+  const response = await axios.patch(
+    process.env.REACT_APP_BASE_URL + `free-courses/thumbnail/${freeCourseId}`,
+    formData,
+    config
+  );
+  return response.data;
+};
+
 const getAFreeCourse = async (freeCourseId) => {
   const response = await axios.get(
     process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`,
+    config
+  );
+  return response.data;
+};
+
+const getFreeCourseByCategoryId = async (categoryId) => {
+  const response = await axios.get(
+    process.env.REACT_APP_BASE_URL + `free-courses/category/${categoryId}`,
     config
   );
   return response.data;
@@ -54,6 +73,8 @@ const freeCourseService = {
   getAllFreeCourse,
   updateFreeCourse,
   getAFreeCourse,
-  deleteFreeCourse
+  deleteFreeCourse,
+  getFreeCourseByCategoryId,
+  updateFreeCourseThumbnail
 };
 export default freeCourseService;

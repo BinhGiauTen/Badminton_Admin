@@ -21,24 +21,26 @@ export const coachRegister = createAsyncThunk(
   }
 );
 
-export const getAllCoach = createAsyncThunk(
-  "coach/get-all-coach",
-  async (thunkAPI) => {
+export const updateCoach = createAsyncThunk(
+  "coach/update-coach",
+  async (user,thunkAPI) => {
     try {
-      return await coachService.getAllCoach();
+      return await coachService.updateCoach(user);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
 
-export const deleteCoach = createAsyncThunk(
-  "coach/del-a-coach",
-  async (id, thunkAPI) => {
+export const updateCoachAvatar = createAsyncThunk(
+  "coach/update-coach-avatar",
+  async ({id,file},thunkAPI) => {
     try {
-      return await coachService.deleteCoach(id);
+      return await coachService.updateCoachAvatar(id,file);
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
     }
   }
 );
@@ -51,46 +53,46 @@ export const coachSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(coachRegister.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(coachRegister.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isError = false;
-      state.isSuccess = true;
-      state.createdUser = action.payload;
-    })
-    .addCase(coachRegister.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.isSuccess = false;
-      state.message = action.payload;
-    })
-      .addCase(getAllCoach.pending, (state) => {
+      .addCase(coachRegister.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAllCoach.fulfilled, (state, action) => {
+      .addCase(coachRegister.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.coaches = action.payload;
+        state.createdUser = action.payload;
       })
-      .addCase(getAllCoach.rejected, (state, action) => {
+      .addCase(coachRegister.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.payload;
+      })
+      .addCase(updateCoach.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateCoach.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.updatedUser = action.payload;
+      })
+      .addCase(updateCoach.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
       })
-      .addCase(deleteCoach.pending, (state) => {
+      .addCase(updateCoachAvatar.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteCoach.fulfilled, (state, action) => {
+      .addCase(updateCoachAvatar.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.deletedCoach = action.payload;
+        state.updatedUser = action.payload;
       })
-      .addCase(deleteCoach.rejected, (state, action) => {
+      .addCase(updateCoachAvatar.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

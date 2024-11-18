@@ -54,7 +54,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
-  }, []);
+  }, [dispatch]);
 
   return (
     <Layout>
@@ -97,9 +97,9 @@ const MainLayout = () => {
                 ]
               : []),
             {
-              key: "free-course-list",
+              key: "course-list",
               icon: <FaBloggerB className="fs-4" />,
-              label: "Free Courses",
+              label: "Courses",
               children: [
                 {
                   key: "free-course",

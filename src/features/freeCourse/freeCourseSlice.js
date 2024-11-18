@@ -21,6 +21,18 @@ export const getAllFreeCourse = createAsyncThunk(
   }
 );
 
+export const getFreeCourseByCategoryId = createAsyncThunk(
+  "freeCourse/get-free-course-by-category",
+  async (categoryId, thunkAPI) => {
+    try {
+      return await freeCourseService.getFreeCourseByCategoryId(categoryId);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const getAFreeCourse = createAsyncThunk(
   "freeCourse/get-a-free-course",
   async (freeCourseId, thunkAPI) => {
@@ -57,8 +69,20 @@ export const updateFreeCourse = createAsyncThunk(
   }
 );
 
+export const updateFreeCourseThumbnail = createAsyncThunk(
+  "freeCourse/update-free-course-thumbnail",
+  async ({freeCourseId, file}, thunkAPI) => {
+    try {
+      return await freeCourseService.updateFreeCourseThumbnail(freeCourseId, file);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const deleteFreeCourse = createAsyncThunk(
-  "course/delete-free-course",
+  "freeCourse/delete-free-course",
   async (freeCourseId, thunkAPI) => {
     try {
       return await freeCourseService.deleteFreeCourse(freeCourseId);
@@ -92,6 +116,21 @@ export const freeCourseSlice = createSlice({
         state.isSuccess = false;
         state.message = action.error;
       })
+      .addCase(getFreeCourseByCategoryId.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getFreeCourseByCategoryId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.freeCourses = action.payload;
+      })
+      .addCase(getFreeCourseByCategoryId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
       .addCase(getAFreeCourse.pending, (state) => {
         state.isLoading = true;
       })
@@ -117,6 +156,21 @@ export const freeCourseSlice = createSlice({
         state.updatedFreeCourse = action.payload;
       })
       .addCase(updateFreeCourse.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(updateFreeCourseThumbnail.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateFreeCourseThumbnail.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.updatedFreeCourse = action.payload;
+      })
+      .addCase(updateFreeCourseThumbnail.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
