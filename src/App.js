@@ -14,11 +14,11 @@ import { useContext } from "react";
 import AuthContext from "./context/AuthContext";
 import Categories from "./pages/Categories";
 import AddCategory from "./pages/AddCategory";
-import FreeCourses from "./pages/FreeCourses";
-import AddFreeCourse from "./pages/AddFreeCourse";
 import Lessons from "./pages/Lessons";
 import AddFreeLesson from "./pages/AddFreeLesson";
 import Register from "./pages/auth/Register";
+import Courses from "./pages/Courses";
+import AddCourse from "./pages/AddCourse";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -32,9 +32,10 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="coaches" element={<Coaches />} />
               <Route path="users" element={<Users />} />
-              <Route path="free-courses" element={<FreeCourses />} />
-              <Route path="free-course" element={<AddFreeCourse />} />
-              <Route path="free-course/:id" element={<AddFreeCourse />} />
+              <Route path="courses" element={<Courses />} />
+              <Route path="course" element={<AddCourse />} />
+              <Route path="free-course/:id" element={<AddCourse />} />
+              <Route path="paid-course/:id" element={<AddCourse />} />
               <Route path="lessons" element={<Lessons />} />
               <Route path="free-lesson" element={<AddFreeLesson />} />
               <Route path="free-lesson/:id" element={<AddFreeLesson />} />

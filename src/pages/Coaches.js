@@ -21,8 +21,11 @@ const Coaches = () => {
       dataIndex: "key",
     },
     {
-      title: "User Name",
-      dataIndex: "user_name",
+      title: "First Name",
+      dataIndex: "first_name",
+    },{
+      title: "Last Name",
+      dataIndex: "last_name",
     },
     {
       title: "Email",

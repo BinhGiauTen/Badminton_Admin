@@ -102,14 +102,14 @@ const MainLayout = () => {
               label: "Courses",
               children: [
                 {
-                  key: "free-course",
+                  key: "course",
                   icon: <ImBlog className="fs-4" />,
-                  label: "Add Free Course",
+                  label: "Add Course",
                 },
                 {
-                  key: "free-courses",
+                  key: "courses",
                   icon: <FaBloggerB className="fs-4" />,
-                  label: "Free Courses",
+                  label: "Courses",
                 },
               ],
             },
