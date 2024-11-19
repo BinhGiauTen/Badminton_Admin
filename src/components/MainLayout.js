@@ -113,23 +113,23 @@ const MainLayout = () => {
                 },
               ],
             },
-            {
-              key: "lesson-list",
-              icon: <FaBloggerB className="fs-4" />,
-              label: "Lessons",
-              children: [
-                {
-                  key: "free-lesson",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Free Lesson",
-                },
-                {
-                  key: "lessons",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Lessons",
-                },
-              ],
-            },
+            // {
+            //   key: "lesson-list",
+            //   icon: <FaBloggerB className="fs-4" />,
+            //   label: "Lessons",
+            //   children: [
+            //     {
+            //       key: "free-lesson",
+            //       icon: <ImBlog className="fs-4" />,
+            //       label: "Add Free Lesson",
+            //     },
+            //     {
+            //       key: "lessons",
+            //       icon: <FaBloggerB className="fs-4" />,
+            //       label: "Lessons",
+            //     },
+            //   ],
+            // },
             {
               key: "category-list",
               icon: <FaBloggerB className="fs-4" />,

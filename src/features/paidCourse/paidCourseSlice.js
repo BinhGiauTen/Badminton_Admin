@@ -45,6 +45,18 @@ export const getPaidCourseByCategoryId = createAsyncThunk(
     }
   );
 
+  export const getPaidCourseByCoachId = createAsyncThunk(
+    "paidCourse/get-paid-course-by-coachId",
+    async (coachId, thunkAPI) => {
+      try {
+        return await paidCourseService.getPaidCourseByCoachId(coachId);
+      } catch (error) {
+        const message = error.message || "Network Error";
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  );
+
 export const createPaidCourse = createAsyncThunk(
   "paidCourse/create-paid-course",
   async (paidCourseData, thunkAPI) => {
@@ -141,6 +153,21 @@ export const paidCourseSlice = createSlice({
         state.paidCourses = action.payload;
       })
       .addCase(getPaidCourseByCategoryId.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(getPaidCourseByCoachId.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getPaidCourseByCoachId.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.paidCourses = action.payload;
+      })
+      .addCase(getPaidCourseByCoachId.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

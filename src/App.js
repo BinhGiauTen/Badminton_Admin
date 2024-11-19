@@ -14,11 +14,11 @@ import { useContext } from "react";
 import AuthContext from "./context/AuthContext";
 import Categories from "./pages/Categories";
 import AddCategory from "./pages/AddCategory";
-import Lessons from "./pages/Lessons";
 import AddFreeLesson from "./pages/AddFreeLesson";
 import Register from "./pages/auth/Register";
 import Courses from "./pages/Courses";
 import AddCourse from "./pages/AddCourse";
+import CourseDetail from "./pages/CourseDetail";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -36,9 +36,10 @@ function App() {
               <Route path="course" element={<AddCourse />} />
               <Route path="free-course/:id" element={<AddCourse />} />
               <Route path="paid-course/:id" element={<AddCourse />} />
-              <Route path="lessons" element={<Lessons />} />
-              <Route path="free-lesson" element={<AddFreeLesson />} />
-              <Route path="free-lesson/:id" element={<AddFreeLesson />} />
+              <Route path="free-course/:id/course-detail" element={<CourseDetail />} />
+              <Route path="paid-course/:id/course-detail" element={<CourseDetail />} />
+              <Route path="free-course/:id/add-lesson" element={<AddFreeLesson />} />
+              <Route path="paid-course/:id/add-lesson" element={<AddFreeLesson />} />
               <Route path="categories" element={<Categories />} />
               <Route path="category" element={<AddCategory />} />
               <Route path="category/:id" element={<AddCategory />} />

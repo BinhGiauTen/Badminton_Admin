@@ -4,9 +4,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
 import { AiFillDelete } from "react-icons/ai";
+import {  IoIosMore } from "react-icons/io";
+import { IoAddCircle } from "react-icons/io5";
+
+
 import {
   deletePaidCourse,
   getAllPaidCourse,
+  getPaidCourseByCoachId,
 } from "../features/paidCourse/paidCourseSlice";
 import CustomModal from "../components/CustomModal";
 
@@ -24,8 +29,13 @@ const PaidCourseTable = () => {
   const hideModal = () => setOpen(false);
 
   useEffect(() => {
-    dispatch(getAllPaidCourse());
-  }, [dispatch]);
+    if(userState?.role === "admin"){
+      dispatch(getAllPaidCourse());
+    }else{
+      dispatch(getPaidCourseByCoachId(userState?.id));
+    }
+    
+  }, [dispatch, userState?.role, userState?.id]);
 
   const paidCourseState = useSelector(
     (state) => state?.paidCourse?.paidCourses?.data
@@ -41,14 +51,29 @@ const PaidCourseTable = () => {
     type: course?.type,
     action: (
       <>
+      {course.lessonQuantity > 0 ? (
+          <Link
+            className="ms-2 fs-3 text-info bg-transparent border-0"
+            to={`/dashboard/paid-course/${course.id}/course-detail`}
+          >
+            <IoIosMore />
+          </Link>
+        ) : (
+          <Link
+            className="ms-2 fs-3 text-success bg-transparent border-0"
+            to={`/dashboard/paid-course/${course.id}/add-lesson`}
+          >
+            < IoAddCircle/>
+          </Link>
+        )}
         <Link
-          className="ms-2 fs-3 text-danger bg-transparent border-0"
+          className="ms-2 fs-3 text-warning bg-transparent border-0"
           to={`/dashboard/paid-course/${course.id}`}
         >
           <BiEdit />
         </Link>
         <button
-          className="ms-2 fs-3 text-danger bg-transparent border-0"
+          className="ms-2 fs-3 text-danger bg-transparent border-0 px-0" 
           onClick={() => showModal(course.id)}
         >
           <AiFillDelete />
