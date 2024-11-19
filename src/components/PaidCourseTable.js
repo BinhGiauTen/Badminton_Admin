@@ -15,6 +15,8 @@ const PaidCourseTable = () => {
   const [paidCourseId, setPaidCourseId] = useState("");
   const dispatch = useDispatch();
 
+  const userState = useSelector((state) => state?.user?.user);
+
   const showModal = (id) => {
     setPaidCourseId(id);
     setOpen(true);
@@ -41,7 +43,7 @@ const PaidCourseTable = () => {
       <>
         <Link
           className="ms-2 fs-3 text-danger bg-transparent border-0"
-          to={`/dashboard/paid-course/${course?.id}`}
+          to={`/dashboard/paid-course/${course.id}`}
         >
           <BiEdit />
         </Link>
@@ -56,7 +58,9 @@ const PaidCourseTable = () => {
   }));
 
   const handleDeletePaidCourse = () => {
-    dispatch(deletePaidCourse(paidCourseId));
+    dispatch(
+      deletePaidCourse({ paidCourseId: paidCourseId, coachId: userState.id })
+    );
     setOpen(false);
     setTimeout(() => {
       dispatch(getAllPaidCourse());

@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import CustomInput from "../../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -41,7 +41,7 @@ const Login = () => {
         .then(() => {
           toast.success("An otp has been sent to your email.");
           navigate("/verify-otp", {
-            state: { email: formik.values.email , role: role},
+            state: { email: formik.values.email, role: role },
           });
         })
         .catch((error) => {
@@ -70,9 +70,9 @@ const Login = () => {
         className="py-5"
         style={{
           backgroundImage: `url('/images/bg.webp')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          minHeight: '100vh',
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          minHeight: "100vh",
         }}
       >
         <br />
@@ -81,7 +81,9 @@ const Login = () => {
         <br />
         <br />
         <div className="my-5 w-25 bg-white rounded-3 mx-auto p-4">
-          <h3 className="text-center title">{role === "admin" ? "Admin Login" : "Coach Login"}</h3>
+          <h3 className="text-center title">
+            {role === "admin" ? "Admin Login" : "Coach Login"}
+          </h3>
           <p className="text-center">Login to your account to continue.</p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
@@ -132,9 +134,13 @@ const Login = () => {
             >
               {role === "admin" ? "Admin Login" : "Coach Login"}
             </button>
-            <br/>
+            <br />
             <div className="text-center">
-              <Link to={{ pathname: "/forgot-password", state: { role: role } }}>Forgot Password</Link>
+              <Link
+                to={{ pathname: "/forgot-password", state: { role: role } }}
+              >
+                Forgot Password
+              </Link>
             </div>
           </form>
         </div>

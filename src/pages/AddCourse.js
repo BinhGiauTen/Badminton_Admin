@@ -13,7 +13,11 @@ import {
   updateFreeCourse,
 } from "../features/freeCourse/freeCourseSlice";
 import { getAllCategory } from "../features/category/categorySlice";
-import { createPaidCourse, getAPaidCourse, updatePaidCourse } from "../features/paidCourse/paidCourseSlice";
+import {
+  createPaidCourse,
+  getAPaidCourse,
+  updatePaidCourse,
+} from "../features/paidCourse/paidCourseSlice";
 
 const freeSchema = yup.object().shape({
   name: yup.string().required("Course name is required"),
@@ -31,6 +35,7 @@ const paidSchema = freeSchema.concat(
 
 const AddCourse = () => {
   const [type, setType] = useState("free");
+  console.log("Type:", type);
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -39,8 +44,8 @@ const AddCourse = () => {
 
   const pathParts = location.pathname.split("/");
   const courseId = pathParts[3];
-  const isFreeCourse = pathParts.includes("free");
-  const isPaidCourse = pathParts.includes("paid");
+  const isFreeCourse = pathParts.includes("free-course");
+  const isPaidCourse = pathParts.includes("paid-course");
 
   const freeCourse = useSelector((state) => state?.freeCourse?.freeCourse);
   const paidCourse = useSelector((state) => state?.paidCourse?.paidCourse);
@@ -49,10 +54,11 @@ const AddCourse = () => {
   useEffect(() => {
     if (isFreeCourse && courseId) {
       dispatch(getAFreeCourse(courseId));
-    }else if (isPaidCourse && courseId){
+      setType("free");
+    } else if (isPaidCourse && courseId) {
       dispatch(getAPaidCourse(courseId));
-    } 
-    else {
+      setType("paid");
+    } else {
       dispatch(resetState());
     }
   }, [dispatch, courseId, isFreeCourse, isPaidCourse]);
@@ -78,7 +84,7 @@ const AddCourse = () => {
       const paidData = {
         ...values,
         categoryId: Number(values.categoryId),
-        coachId: userState.id
+        coachId: userState.id,
       };
       if (isFreeCourse && courseId) {
         dispatch(updateFreeCourse({ id: courseId, freeCourseData: freeData }))
@@ -115,7 +121,6 @@ const AddCourse = () => {
           .catch(handleError);
         formik.resetForm();
       }
-
     },
   });
 
@@ -123,7 +128,9 @@ const AddCourse = () => {
     if (error === "Request failed with status code 404") {
       toast.error(`Course with id ${courseId} not found`);
     } else if (error === "Network Error") {
-      toast.error("There was a problem with the server. Please try again later.");
+      toast.error(
+        "There was a problem with the server. Please try again later."
+      );
     } else {
       toast.error("An unknown error occurred.");
     }
@@ -172,13 +179,13 @@ const AddCourse = () => {
               <div>{formik.errors.name}</div>
             ) : null}
           </div>
-          <br/>
+          <br />
 
           <Input.TextArea
             placeholder="Course Description"
             name="description"
             id="description"
-            rows={4} 
+            rows={4}
             onChange={formik.handleChange("description")}
             onBlur={formik.handleBlur("description")}
             value={formik.values.description}
