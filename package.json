@@ -21,6 +21,7 @@
     "antd": "^5.21.2",
     "axios": "^1.7.7",
     "editorjs-change-case": "^0.0.3",
+    "editorjs-html": "^3.4.3",
     "editorjs-text-alignment-blocktune": "^1.0.3",
     "formik": "^2.4.6",
     "react": "^18.3.1",

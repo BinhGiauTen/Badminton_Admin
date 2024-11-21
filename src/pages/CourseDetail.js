@@ -1,29 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Upload } from "antd";
+import { Button, Table, Upload, Card, Typography, Space, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
+import { AiFillDelete, AiOutlineUpload } from "react-icons/ai";
+import { FaEye } from "react-icons/fa";
+import CustomModal from "../components/CustomModal";
 import {
   deleteFreeLesson,
   getAFreeLesson,
 } from "../features/lesson/lessonSlice";
-import CustomModal from "../components/CustomModal";
-import { AiFillDelete, AiOutlineUpload } from "react-icons/ai";
 import { getAFreeCourse } from "../features/freeCourse/freeCourseSlice";
 import { getAPaidCourse } from "../features/paidCourse/paidCourseSlice";
+
+const { Title, Text } = Typography;
 
 const CourseDetail = () => {
   const [open, setOpen] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
-  const showModal = (e) => {
-    setFreeLessonId(e);
-    setOpen(true);
-  };
-  const hideModal = () => {
-    setOpen(false);
-  };
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const location = useLocation();
   const pathParts = location.pathname.split("/");
   const courseId = pathParts[3];
@@ -33,16 +29,9 @@ const CourseDetail = () => {
   const course = useSelector((state) =>
     isFreeCourse ? state?.freeCourse?.freeCourse : state?.paidCourse?.paidCourse
   );
-
   const freeLesson = useSelector(
     (state) => state?.freeCourse?.freeCourse?.freeLesson
   );
-  console.log("Free Lesson:", freeLesson);
-  const paidLesson = useSelector(
-    (state) => state?.paidCourse?.paidCourse?.paidLesson
-  );
-  console.log("Paid Lesson:", paidLesson);
-  // const userState = useSelector((state) => state?.user?.user);
 
   useEffect(() => {
     if (isFreeCourse && courseId) {
@@ -68,6 +57,28 @@ const CourseDetail = () => {
     {
       title: "Action",
       dataIndex: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Button
+            className="ms-2 fs-3 text-info bg-transparent border-0"
+            type="link"
+            icon={<FaEye />}
+            onClick={() => handleClickPreview(record.id)}
+          />
+          <Link
+            className="ms-2 fs-3 text-warning bg-transparent border-0"
+            to={`/dashboard/free-course/${courseId}/lesson/${record.id}`}
+          >
+            <BiEdit />
+          </Link>
+          <Button
+          className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
+            type="link"
+            icon={<AiFillDelete />}
+            onClick={() => showModal(record.id)}
+          />
+        </Space>
+      ),
     },
   ];
 
@@ -75,115 +86,84 @@ const CourseDetail = () => {
     key: index + 1,
     lessonName: lesson?.content?.blocks[0]?.data?.text || "No Title",
     courseId: lesson.freeCourseId,
-    action: (
-      <>
-        <Link
-          className="ms-2 fs-3 text-danger bg-transparent border-0"
-          to={`/free-lesson/${lesson.id}`}
-        >
-          <BiEdit />
-        </Link>
-        <button
-          className="ms-2 fs-3 text-danger bg-transparent border-0"
-          onClick={() => showModal(lesson.id)}
-        >
-          <AiFillDelete />
-        </button>
-      </>
-    ),
+    id: lesson.id,
   }));
 
-  const handleDeleteFreeeLesson = (e) => {
-    dispatch(deleteFreeLesson(e));
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getAFreeLesson(2));
-    }, 100);
+  const showModal = (id) => {
+    setFreeLessonId(id);
+    setOpen(true);
+  };
+
+  const hideModal = () => setOpen(false);
+
+  const handleDeleteFreeeLesson = (id) => {
+    dispatch(deleteFreeLesson(id)).then(() => {
+      dispatch(getAFreeCourse(courseId));
+      hideModal();
+    });
+  };
+
+  const handleClickAddLesson = () => {
+    navigate(`/dashboard/free-course/${courseId}/add-lesson`);
+  };
+
+  const handleClickPreview = (lessonId) => {
+    dispatch(getAFreeLesson(lessonId))
+      .unwrap()
+      .then(() =>
+        navigate(`/dashboard/free-course/${courseId}/preview-lesson`)
+      );
   };
 
   const handleUpload = (info) => {
-    // Implement image upload functionality here
     console.log("Upload image:", info.file);
   };
 
   return (
-    <>
-      {/* <div className="course-info-grid">
-        <div>
-          <h4>Course Name</h4>
-          <p>{course?.name}</p>
+    <div className="course-detail-container">
+      <Card className="course-info-card" bordered>
+        <Title level={3}>{course?.name}</Title>
+        <Text>{course?.description}</Text>
+        <Divider />
+        <div className="course-meta">
+          <Text strong>Type:</Text> {course?.type}
         </div>
-        <div>
-          <h4>Description</h4>
-          <p>{course?.description}</p>
+        <div className="course-meta">
+          <Text strong>Lesson Quantity:</Text> {course?.lessonQuantity}
         </div>
-        <div>
-          <h4>Type</h4>
-          <p>{course?.type}</p>
-        </div>
-        <div>
-          <h4>Price</h4>
-          <p>${course?.price}</p>
-        </div>
-        <div>
-          <h4>Status</h4>
-          <p>{course?.status}</p>
-        </div>
-        <div>
-          <h4>Star Rating</h4>
-          <p>{course?.star} stars</p>
-        </div>
-        <div>
-          <h4>Lesson Quantity</h4>
-          <p>{course?.lessonQuantity}</p>
-        </div>
-        <div>
-          <h4>Student Quantity</h4>
-          <p>{course?.studentQuantity}</p>
-        </div>
-        <div>
-          <h4>Thumbnail</h4>
+        <Divider />
+        <Button type="primary" onClick={handleClickAddLesson} block>
+          Add New Lesson
+        </Button>
+        <Divider />
+        <div className="course-thumbnail">
+          <Title level={5}>Thumbnail</Title>
           <img
             src={course?.thumbnail}
             alt="Course Thumbnail"
-            style={{ width: "100px", height: "100px", objectFit: "cover" }}
+            className="thumbnail-image"
           />
           <Upload onChange={handleUpload} showUploadList={false}>
-            <Button icon={<AiOutlineUpload />} className="mt-2">
-              Upload New Thumbnail
-            </Button>
+            <Button icon={<AiOutlineUpload />}>Upload New Thumbnail</Button>
           </Upload>
         </div>
-      </div> */}
+      </Card>
 
-      <div className="course-detail-container">
-        {/* Course Information Section */}
-        <div className="course-info">
-          <h2 className="course-title">{course?.name}</h2>
-          <p className="course-description">{course?.description}</p>
-          <div className="course-details">
-            <div>
-              <strong>Type:</strong> {course?.type}
-            </div>
-            <div>
-              <strong>Lesson Quantity:</strong> {course?.lessonQuantity}
-            </div>
-          </div>
-        </div>
-      </div>
+      <Table
+        columns={columns}
+        dataSource={data}
+        className="lesson-table"
+        pagination={{ pageSize: 5 }}
+        rowKey={(record) => record.key}
+      />
 
-      <div>
-        <Table columns={columns} dataSource={data} />
-      </div>
       <CustomModal
         hideModal={hideModal}
         open={open}
-        performAction={() => {
-          handleDeleteFreeeLesson(freeLessonId);
-        }}
-        title="Are you sure you want to delete this free lesson"
+        performAction={() => handleDeleteFreeeLesson(freeLessonId)}
+        title="Are you sure you want to delete this lesson?"
       />
-    </>
+    </div>
   );
 };
 

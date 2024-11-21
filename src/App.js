@@ -19,6 +19,8 @@ import Register from "./pages/auth/Register";
 import Courses from "./pages/Courses";
 import AddCourse from "./pages/AddCourse";
 import CourseDetail from "./pages/CourseDetail";
+import AddPaidLesson from "./pages/AddPaidLesson";
+import Lesson from "./pages/Lesson";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -39,7 +41,11 @@ function App() {
               <Route path="free-course/:id/course-detail" element={<CourseDetail />} />
               <Route path="paid-course/:id/course-detail" element={<CourseDetail />} />
               <Route path="free-course/:id/add-lesson" element={<AddFreeLesson />} />
-              <Route path="paid-course/:id/add-lesson" element={<AddFreeLesson />} />
+              <Route path="paid-course/:id/add-lesson" element={<AddPaidLesson />} />
+              <Route path="free-course/:id/preview-lesson" element={<Lesson />} />
+              <Route path="paid-course/:id/preview-lesson" element={<Lesson />} />
+              <Route path="free-course/:id/lesson/:id" element={<AddFreeLesson />} />
+              <Route path="paid-course/:id/lesson/:id" element={<AddPaidLesson />} />
               <Route path="categories" element={<Categories />} />
               <Route path="category" element={<AddCategory />} />
               <Route path="category/:id" element={<AddCategory />} />
