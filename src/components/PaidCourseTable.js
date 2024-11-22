@@ -122,7 +122,7 @@ const PaidCourseTable = () => {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataPaid} />
+      <Table columns={columns} dataSource={dataPaid} pagination={{ pageSize: 5 }}/>
       <CustomModal
         hideModal={hideModal}
         open={open}

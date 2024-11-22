@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Upload, Card, Typography, Space, Divider } from "antd";
+import { Button, Table, Card, Typography, Space, Divider } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
-import { AiFillDelete, AiOutlineUpload } from "react-icons/ai";
+import { AiFillDelete } from "react-icons/ai";
 import { FaEye } from "react-icons/fa";
 import CustomModal from "../components/CustomModal";
-import {
-  deleteFreeLesson,
-  getAFreeLesson,
-} from "../features/lesson/lessonSlice";
-import { getAFreeCourse } from "../features/freeCourse/freeCourseSlice";
+import { deleteFreeLesson, getAFreeLesson } from "../features/lesson/lessonSlice";
+import { getAFreeCourse, updateFreeCourseThumbnail, deleteFreeCourse } from "../features/freeCourse/freeCourseSlice";
 import { getAPaidCourse } from "../features/paidCourse/paidCourseSlice";
+import { toast } from "react-toastify";
 
 const { Title, Text } = Typography;
 
 const CourseDetail = () => {
-  const [open, setOpen] = useState(false);
+  const [openDeleteCourseModal, setOpenDeleteCourseModal] = useState(false);
+  const [openDeleteLessonModal, setOpenDeleteLessonModal] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -29,9 +28,7 @@ const CourseDetail = () => {
   const course = useSelector((state) =>
     isFreeCourse ? state?.freeCourse?.freeCourse : state?.paidCourse?.paidCourse
   );
-  const freeLesson = useSelector(
-    (state) => state?.freeCourse?.freeCourse?.freeLesson
-  );
+  const freeLesson = useSelector((state) => state?.freeCourse?.freeCourse?.freeLesson);
 
   useEffect(() => {
     if (isFreeCourse && courseId) {
@@ -72,10 +69,10 @@ const CourseDetail = () => {
             <BiEdit />
           </Link>
           <Button
-          className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
+            className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
             type="link"
             icon={<AiFillDelete />}
-            onClick={() => showModal(record.id)}
+            onClick={() => showDeleteLessonModal(record.id)}
           />
         </Space>
       ),
@@ -89,16 +86,27 @@ const CourseDetail = () => {
     id: lesson.id,
   }));
 
-  const showModal = (id) => {
+  const showDeleteCourseModal = () => setOpenDeleteCourseModal(true);
+  const showDeleteLessonModal = (id) => {
     setFreeLessonId(id);
-    setOpen(true);
+    setOpenDeleteLessonModal(true);
   };
 
-  const hideModal = () => setOpen(false);
+  const hideModal = () => {
+    setOpenDeleteCourseModal(false);
+    setOpenDeleteLessonModal(false);
+  };
 
-  const handleDeleteFreeeLesson = (id) => {
-    dispatch(deleteFreeLesson(id)).then(() => {
+  const handleDeleteFreeLesson = () => {
+    dispatch(deleteFreeLesson(freeLessonId)).then(() => {
       dispatch(getAFreeCourse(courseId));
+      hideModal();
+    });
+  };
+
+  const handleDeleteFreeCourse = () => {
+    dispatch(deleteFreeCourse(courseId)).then(() => {
+      navigate("/dashboard/courses");
       hideModal();
     });
   };
@@ -115,8 +123,29 @@ const CourseDetail = () => {
       );
   };
 
-  const handleUpload = (info) => {
-    console.log("Upload image:", info.file);
+  const handleFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const payload = {
+        freeCourseId: courseId,
+        file: selectedFile,
+      };
+      dispatch(updateFreeCourseThumbnail(payload))
+        .unwrap()
+        .then(() => {
+          toast.success("Uploaded thumbnail successfully.");
+          dispatch(getAFreeCourse(courseId));
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error("Upload thumbnail failed. Please try again.");
+          } else if (error === "Network Error") {
+            toast.error("There was a server problem. Please try later.");
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+    }
   };
 
   return (
@@ -132,10 +161,6 @@ const CourseDetail = () => {
           <Text strong>Lesson Quantity:</Text> {course?.lessonQuantity}
         </div>
         <Divider />
-        <Button type="primary" onClick={handleClickAddLesson} block>
-          Add New Lesson
-        </Button>
-        <Divider />
         <div className="course-thumbnail">
           <Title level={5}>Thumbnail</Title>
           <img
@@ -143,9 +168,33 @@ const CourseDetail = () => {
             alt="Course Thumbnail"
             className="thumbnail-image"
           />
-          <Upload onChange={handleUpload} showUploadList={false}>
-            <Button icon={<AiOutlineUpload />}>Upload New Thumbnail</Button>
-          </Upload>
+          <input
+            style={{ marginLeft: "10px" }}
+            type="file"
+            onChange={handleFileChange}
+          />
+        </div>
+        <div className="d-flex mt-4">
+          <Button
+            type="primary"
+            onClick={handleClickAddLesson}
+            block
+            style={{
+              width: "200px",
+              backgroundColor: "green",
+              borderColor: "green",
+            }}
+          >
+            Add New Lesson
+          </Button>
+          <Button
+            type="primary"
+            onClick={showDeleteCourseModal}
+            block
+            style={{ width: "200px", marginLeft: "10px" }}
+          >
+            Delete Course
+          </Button>
         </div>
       </Card>
 
@@ -158,9 +207,16 @@ const CourseDetail = () => {
       />
 
       <CustomModal
+        open={openDeleteCourseModal}
         hideModal={hideModal}
-        open={open}
-        performAction={() => handleDeleteFreeeLesson(freeLessonId)}
+        performAction={handleDeleteFreeCourse}
+        title="Are you sure you want to delete this free course?"
+      />
+
+      <CustomModal
+        open={openDeleteLessonModal}
+        hideModal={hideModal}
+        performAction={handleDeleteFreeLesson}
         title="Are you sure you want to delete this lesson?"
       />
     </div>

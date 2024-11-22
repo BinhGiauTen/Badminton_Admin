@@ -22,7 +22,6 @@ import {
 const freeSchema = yup.object().shape({
   name: yup.string().required("Course name is required"),
   description: yup.string().required("Description is required"),
-  thumbnail: yup.string().required("Thumbnail is required"),
   categoryId: yup.number().required("Category is required"),
   type: yup.string().oneOf(["free", "paid"]).required("Type is required"),
 });
@@ -70,7 +69,6 @@ const AddCourse = () => {
     initialValues: {
       name: freeCourse?.name || paidCourse?.name || "",
       description: freeCourse?.description || paidCourse?.description || "",
-      thumbnail: freeCourse?.thumbnail || paidCourse?.thumbnail || "",
       categoryId: freeCourse?.categoryId || paidCourse?.categoryId || 0,
       type: freeCourse?.type || paidCourse?.type || "free",
       price: paidCourse?.price || "",
@@ -80,11 +78,13 @@ const AddCourse = () => {
       const freeData = {
         ...values,
         categoryId: Number(values.categoryId),
+        thumbnail: "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
       };
       const paidData = {
         ...values,
         categoryId: Number(values.categoryId),
         coachId: userState.id,
+        thumbnail: "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
       };
       if (isFreeCourse && courseId) {
         dispatch(updateFreeCourse({ id: courseId, freeCourseData: freeData }))
@@ -159,6 +159,7 @@ const AddCourse = () => {
             value={formik.values.type}
             className="form-control py-3 mb-3"
             id="type"
+            disabled={courseId !== undefined}
           >
             <option value="">Select Type</option>
             <option value="free">Free</option>
@@ -195,22 +196,7 @@ const AddCourse = () => {
               <div>{formik.errors.description}</div>
             ) : null}
           </div>
-
-          <CustomInput
-            type="text"
-            label="Thumbnail"
-            name="thumbnail"
-            id="thumbnail"
-            onCh={formik.handleChange("thumbnail")}
-            onBl={formik.handleBlur("thumbnail")}
-            val={formik.values.thumbnail}
-          />
-          <div className="error">
-            {formik.touched.thumbnail && formik.errors.thumbnail ? (
-              <div>{formik.errors.thumbnail}</div>
-            ) : null}
-          </div>
-          <br />
+          <br/>
 
           <select
             name="categoryId"
@@ -219,6 +205,7 @@ const AddCourse = () => {
             value={formik.values.categoryId}
             className="form-control py-3 mb-3"
             id="categoryId"
+            disabled={courseId !== undefined}
           >
             <option value="">Select Category</option>
             {categoryState.map((i, j) => {

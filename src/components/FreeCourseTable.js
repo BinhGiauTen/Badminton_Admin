@@ -1,28 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 import { Table, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
-import {  IoIosMore } from "react-icons/io";
-import { IoAddCircle } from "react-icons/io5";
+import { IoIosMore } from "react-icons/io";
 import {
-  deleteFreeCourse,
   getAllFreeCourse,
 } from "../features/freeCourse/freeCourseSlice";
-import CustomModal from "../components/CustomModal";
 
 const FreeCourseTable = () => {
-  const [open, setOpen] = useState(false);
-  const [freeCourseId, setFreeCourseId] = useState("");
   const userState = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
-
-  const showModal = (id) => {
-    setFreeCourseId(id);
-    setOpen(true);
-  };
-  const hideModal = () => setOpen(false);
 
   useEffect(() => {
     if (userState?.role === "admin") {
@@ -43,44 +31,21 @@ const FreeCourseTable = () => {
     type: course.type,
     action: (
       <>
-        {course.lessonQuantity > 0 ? (
-          <Link
-            className="ms-2 fs-3 text-info bg-transparent border-0"
-            to={`/dashboard/free-course/${course.id}/course-detail`}
-          >
-            <IoIosMore />
-          </Link>
-        ) : (
-          <Link
-            className="ms-2 fs-3 text-success bg-transparent border-0"
-            to={`/dashboard/free-course/${course.id}/add-lesson`}
-          >
-            <IoAddCircle />
-          </Link>
-        )}
+        <Link
+          className="ms-2 fs-3 text-info bg-transparent border-0"
+          to={`/dashboard/free-course/${course.id}/course-detail`}
+        >
+          <IoIosMore />
+        </Link>
         <Link
           className="ms-2 fs-3 text-warning bg-transparent border-0"
           to={`/dashboard/free-course/${course.id}`}
         >
           <BiEdit />
         </Link>
-        <button
-          className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
-          onClick={() => showModal(course.id)}
-        >
-          <AiFillDelete />
-        </button>
       </>
     ),
   }));
-
-  const handleDeleteFreeCourse = () => {
-    dispatch(deleteFreeCourse(freeCourseId));
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getAllFreeCourse());
-    }, 100);
-  };
 
   const columns = [
     { title: "SNo", dataIndex: "key" },
@@ -98,9 +63,11 @@ const FreeCourseTable = () => {
       title: "Thumbnail",
       dataIndex: "thumbnail",
       render: (text) => (
-        <Tooltip title={text}>
-          {text.length > 40 ? `${text.slice(0, 40)}...` : text}
-        </Tooltip>
+        <img
+          src={text}
+          alt="Thumbnail"
+          style={{ width: "150px", height: "auto" }}
+        />
       ),
     },
     { title: "Lesson Quantity", dataIndex: "lessonQuantity" },
@@ -111,12 +78,10 @@ const FreeCourseTable = () => {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataFree} />
-      <CustomModal
-        hideModal={hideModal}
-        open={open}
-        performAction={handleDeleteFreeCourse}
-        title="Are you sure you want to delete this free course?"
+      <Table
+        columns={columns}
+        dataSource={dataFree}
+        pagination={{ pageSize: 5 }}
       />
     </>
   );

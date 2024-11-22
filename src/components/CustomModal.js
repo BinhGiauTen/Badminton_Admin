@@ -1,18 +1,17 @@
 import React from "react";
 import { Modal } from "antd";
 
-const CustomModal = (props) => {
-    const {open, hideModal, performAction,title} = props;
+const CustomModal = ({ open, hideModal, performAction, title, onOkText, onCancelText }) => {
   return (
     <Modal
-      title="Modal"
+      title={title}
       open={open}
       onOk={performAction}
       onCancel={hideModal}
-      okText="OK"
-      cancelText="Cancel"
+      okText={onOkText || "OK"}
+      cancelText={onCancelText || "Cancel"}
     >
-        <p>{title}</p>
+      <p>{title}</p>
     </Modal>
   );
 };
