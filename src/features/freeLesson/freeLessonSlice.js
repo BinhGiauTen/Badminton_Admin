@@ -1,5 +1,5 @@
-import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import lessonService from "./lessonService";
+import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
+import freeLessonService from "./freeLessonService";
 
 const initialState = {
   freeLessons: [],
@@ -14,7 +14,7 @@ export const getAFreeLesson = createAsyncThunk(
   "lesson/get-a-free-lesson",
   async (freeLessonId, thunkAPI) => {
     try {
-      return await lessonService.getAFreeLesson(freeLessonId);
+      return await freeLessonService.getAFreeLesson(freeLessonId);
     } catch (error) {
       const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);
@@ -26,7 +26,7 @@ export const createFreeLesson = createAsyncThunk(
   "lesson/create-free-lesson",
   async (freeLessonData, thunkAPI) => {
     try {
-      return await lessonService.createFreeLesson(freeLessonData);
+      return await freeLessonService.createFreeLesson(freeLessonData);
     } catch (error) {
       const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);
@@ -38,7 +38,7 @@ export const updateFreeLesson = createAsyncThunk(
   "lesson/update-free-lesson",
   async (freeLessonData, thunkAPI) => {
     try {
-      return await lessonService.updateFreeLesson(freeLessonData);
+      return await freeLessonService.updateFreeLesson(freeLessonData);
     } catch (error) {
       const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);
@@ -50,7 +50,7 @@ export const deleteFreeLesson = createAsyncThunk(
     "lesson/delete-free-lesson",
     async (freeLessonId, thunkAPI) => {
       try {
-        return await lessonService.deleteFreeLesson(freeLessonId);
+        return await freeLessonService.deleteFreeLesson(freeLessonId);
       } catch (error) {
         const message = error.message || "Network Error";
         return thunkAPI.rejectWithValue(message);
@@ -58,20 +58,19 @@ export const deleteFreeLesson = createAsyncThunk(
     }
   );
 
-  export const uploadImageFreeLesson = createAsyncThunk(
+  export const uploadImageLesson = createAsyncThunk(
     "lesson/upload-image-free-lesson",
     async (file, thunkAPI) => {
       try {
-        return await lessonService.uploadImageFreeLesson(file);
+        return await freeLessonService.uploadImageLesson(file);
       } catch (error) {
         return thunkAPI.rejectWithValue(error);
       }
     }
   );
 
-export const resetState = createAction("Reset_all");
 
-export const lessonSlice = createSlice({
+export const freeLessonSlice = createSlice({
   name: "freeLessons",
   initialState,
   reducers: {},
@@ -137,24 +136,22 @@ export const lessonSlice = createSlice({
         state.isSuccess = false;
         state.message = action.error;
       })
-      .addCase(uploadImageFreeLesson.pending, (state) => {
+      .addCase(uploadImageLesson.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(uploadImageFreeLesson.fulfilled, (state, action) => {
+      .addCase(uploadImageLesson.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.uploaddImageFreeLesson = action.payload;
+        state.uploaddImageLesson = action.payload;
       })
-      .addCase(uploadImageFreeLesson.rejected, (state, action) => {
+      .addCase(uploadImageLesson.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;
         state.message = action.error;
       })
-
-      .addCase(resetState, () => initialState);
   },
 });
 
-export default lessonSlice.reducer;
+export default freeLessonSlice.reducer;

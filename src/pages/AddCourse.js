@@ -29,12 +29,13 @@ const freeSchema = yup.object().shape({
 const paidSchema = freeSchema.concat(
   yup.object().shape({
     price: yup.string().required("Price is required"),
+    status: yup.string().oneOf(["publish", "non-publish"]).required("Status is required"),
   })
 );
 
 const AddCourse = () => {
   const [type, setType] = useState("free");
-  console.log("Type:", type);
+  const [status, setStatus] = useState("non-publish");
   const dispatch = useDispatch();
   const location = useLocation();
   const navigate = useNavigate();
@@ -71,6 +72,7 @@ const AddCourse = () => {
       description: freeCourse?.description || paidCourse?.description || "",
       categoryId: freeCourse?.categoryId || paidCourse?.categoryId || 0,
       type: freeCourse?.type || paidCourse?.type || "free",
+      status: paidCourse?.status || "non-publish",
       price: paidCourse?.price || "",
     },
     validationSchema: validationSchema,
@@ -78,13 +80,15 @@ const AddCourse = () => {
       const freeData = {
         ...values,
         categoryId: Number(values.categoryId),
-        thumbnail: "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
+        thumbnail:
+          "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
       };
       const paidData = {
         ...values,
         categoryId: Number(values.categoryId),
         coachId: userState.id,
-        thumbnail: "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
+        thumbnail:
+          "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
       };
       if (isFreeCourse && courseId) {
         dispatch(updateFreeCourse({ id: courseId, freeCourseData: freeData }))
@@ -112,6 +116,7 @@ const AddCourse = () => {
           .catch(handleError);
         formik.resetForm();
       } else {
+        console.log("Paid data create:", paidData);
         dispatch(createPaidCourse(paidData))
           .unwrap()
           .then(() => {
@@ -196,7 +201,7 @@ const AddCourse = () => {
               <div>{formik.errors.description}</div>
             ) : null}
           </div>
-          <br/>
+          <br />
 
           <select
             name="categoryId"
@@ -218,22 +223,42 @@ const AddCourse = () => {
           </select>
 
           {type === "paid" ? (
-            <div>
-              <CustomInput
-                type="text"
-                label="Price"
-                name="price"
-                id="price"
-                onCh={formik.handleChange("price")}
-                onBl={formik.handleBlur("price")}
-                val={formik.values.price}
-              />
-              <div className="error">
-                {formik.touched.price && formik.errors.price ? (
-                  <div>{formik.errors.price}</div>
-                ) : null}
+            <>
+              <div>
+                <CustomInput
+                  type="text"
+                  label="Price"
+                  name="price"
+                  id="price"
+                  onCh={formik.handleChange("price")}
+                  onBl={formik.handleBlur("price")}
+                  val={formik.values.price}
+                />
+                <div className="error">
+                  {formik.touched.price && formik.errors.price ? (
+                    <div>{formik.errors.price}</div>
+                  ) : null}
+                </div>
               </div>
-            </div>
+              <br/>
+
+              <select
+                name="status"
+                onChange={(e) => {
+                  const selectedStatus = e.target.value;
+                  setStatus(selectedStatus);
+                  formik.setFieldValue("status", selectedStatus);
+                }}
+                onBlur={formik.handleBlur("status")}
+                value={formik.values.status}
+                className="form-control py-3 mb-3"
+                id="status"
+              >
+                <option value="">Select Status</option>
+                <option value="non-publish">non-publish</option>
+                <option value="publish">publish</option>
+              </select>
+            </>
           ) : (
             ""
           )}

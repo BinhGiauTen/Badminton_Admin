@@ -1,40 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Table, Tooltip } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
-import { AiFillDelete } from "react-icons/ai";
-import {  IoIosMore } from "react-icons/io";
-import { IoAddCircle } from "react-icons/io5";
-
+import { IoIosMore } from "react-icons/io";
 
 import {
-  deletePaidCourse,
   getAllPaidCourse,
   getPaidCourseByCoachId,
 } from "../features/paidCourse/paidCourseSlice";
-import CustomModal from "../components/CustomModal";
 
 const PaidCourseTable = () => {
-  const [open, setOpen] = useState(false);
-  const [paidCourseId, setPaidCourseId] = useState("");
   const dispatch = useDispatch();
-
   const userState = useSelector((state) => state?.user?.user);
 
-  const showModal = (id) => {
-    setPaidCourseId(id);
-    setOpen(true);
-  };
-  const hideModal = () => setOpen(false);
-
   useEffect(() => {
-    if(userState?.role === "admin"){
+    if (userState?.role === "admin") {
       dispatch(getAllPaidCourse());
-    }else{
+    } else {
       dispatch(getPaidCourseByCoachId(userState?.id));
     }
-    
   }, [dispatch, userState?.role, userState?.id]);
 
   const paidCourseState = useSelector(
@@ -51,46 +36,21 @@ const PaidCourseTable = () => {
     type: course?.type,
     action: (
       <>
-      {course.lessonQuantity > 0 ? (
-          <Link
-            className="ms-2 fs-3 text-info bg-transparent border-0"
-            to={`/dashboard/paid-course/${course.id}/course-detail`}
-          >
-            <IoIosMore />
-          </Link>
-        ) : (
-          <Link
-            className="ms-2 fs-3 text-success bg-transparent border-0"
-            to={`/dashboard/paid-course/${course.id}/add-lesson`}
-          >
-            < IoAddCircle/>
-          </Link>
-        )}
+        <Link
+          className="ms-2 fs-3 text-info bg-transparent border-0"
+          to={`/dashboard/paid-course/${course.id}/course-detail`}
+        >
+          <IoIosMore />
+        </Link>
         <Link
           className="ms-2 fs-3 text-warning bg-transparent border-0"
           to={`/dashboard/paid-course/${course.id}`}
         >
           <BiEdit />
         </Link>
-        <button
-          className="ms-2 fs-3 text-danger bg-transparent border-0 px-0" 
-          onClick={() => showModal(course.id)}
-        >
-          <AiFillDelete />
-        </button>
       </>
     ),
   }));
-
-  const handleDeletePaidCourse = () => {
-    dispatch(
-      deletePaidCourse({ paidCourseId: paidCourseId, coachId: userState.id })
-    );
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getAllPaidCourse());
-    }, 100);
-  };
 
   const columns = [
     { title: "SNo", dataIndex: "key" },
@@ -108,9 +68,11 @@ const PaidCourseTable = () => {
       title: "Thumbnail",
       dataIndex: "thumbnail",
       render: (text) => (
-        <Tooltip title={text}>
-          {text.length > 40 ? `${text.slice(0, 40)}...` : text}
-        </Tooltip>
+        <img
+          src={text}
+          alt="Thumbnail"
+          style={{ width: "150px", height: "auto" }}
+        />
       ),
     },
     { title: "Lesson Quantity", dataIndex: "lessonQuantity" },
@@ -122,12 +84,10 @@ const PaidCourseTable = () => {
 
   return (
     <>
-      <Table columns={columns} dataSource={dataPaid} pagination={{ pageSize: 5 }}/>
-      <CustomModal
-        hideModal={hideModal}
-        open={open}
-        performAction={handleDeletePaidCourse}
-        title="Are you sure you want to delete this paid course?"
+      <Table
+        columns={columns}
+        dataSource={dataPaid}
+        pagination={{ pageSize: 5 }}
       />
     </>
   );

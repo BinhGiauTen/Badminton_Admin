@@ -14,7 +14,7 @@ import InlineCode from "@editorjs/inline-code";
 import AlignmentBlockTune from "editorjs-text-alignment-blocktune";
 import ImageTool from "@editorjs/image";
 import { useDispatch } from "react-redux";
-import { uploadImageFreeLesson } from "../features/lesson/lessonSlice";
+import { uploadImageLesson } from "../features/freeLesson/freeLessonSlice";
 
 const Editor = ({ data, onChange, editorBlock }) => {
   const dispatch = useDispatch();
@@ -63,7 +63,7 @@ const Editor = ({ data, onChange, editorBlock }) => {
             config: {
               uploader: {
                 uploadByFile(file) {
-                  return dispatch(uploadImageFreeLesson(file)).then(
+                  return dispatch(uploadImageLesson(file)).then(
                     (response) => {
                       if (response) {
                         return {

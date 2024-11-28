@@ -3,7 +3,7 @@ import editorjsHTML from "editorjs-html";
 import { useSelector } from "react-redux";
 
 const Lesson = () => {
-  const lessonState = useSelector((state)=> state?.lesson?.freeLesson);
+  const lessonState = useSelector((state)=> state?.freeLesson?.freeLesson);
   const edjsParser = editorjsHTML(); 
   const renderHtmlContent = edjsParser.parse(lessonState?.content).join("");
 

@@ -6,7 +6,7 @@ import {
   getAFreeLesson,
   createFreeLesson,
   updateFreeLesson,
-} from "../features/lesson/lessonSlice";
+} from "../features/freeLesson/freeLessonSlice";
 import EditorJS from "../components/Editor";
 
 const INITIAL_DATA = {
@@ -32,7 +32,7 @@ const AddFreeLesson = () => {
   const lessonId = pathParts[5];
   const isAddLesson = pathParts.includes("add-lesson");
 
-  const freeLesson = useSelector((state) => state.lesson.freeLesson);
+  const freeLesson = useSelector((state) => state.freeLesson.freeLesson);
   const [content, setContent] = useState(INITIAL_DATA);
   const [editorKey, setEditorKey] = useState(0);
 

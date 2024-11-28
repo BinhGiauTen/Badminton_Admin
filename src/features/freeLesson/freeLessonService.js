@@ -37,7 +37,7 @@ const deleteFreeLesson = async (freeLessonId) => {
     return response.data;
   };
 
-const uploadImageFreeLesson = async (file) => {
+const uploadImageLesson = async (file) => {
   const formData = new FormData();
   formData.append("image", file);
   const response = await axios.patch(
@@ -48,11 +48,11 @@ const uploadImageFreeLesson = async (file) => {
   return response.data;
 };
 
-const lessonService = {
+const freeLessonService = {
   createFreeLesson,
   updateFreeLesson,
   getAFreeLesson,
   deleteFreeLesson,
-  uploadImageFreeLesson
+  uploadImageLesson
 };
-export default lessonService;
+export default freeLessonService;
