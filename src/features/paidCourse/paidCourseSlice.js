@@ -95,9 +95,9 @@ export const updatePaidCourseThumbnail = createAsyncThunk(
 
 export const deletePaidCourse = createAsyncThunk(
   "paidCourse/delete-paid-course",
-  async ({paidCourseId, coachId}, thunkAPI) => {
+  async (paidCourseId, thunkAPI) => {
     try {
-      return await paidCourseService.deletePaidCourse(paidCourseId, coachId);
+      return await paidCourseService.deletePaidCourse(paidCourseId);
     } catch (error) {
       const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);

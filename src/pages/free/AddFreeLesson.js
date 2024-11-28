@@ -6,8 +6,9 @@ import {
   getAFreeLesson,
   createFreeLesson,
   updateFreeLesson,
-} from "../features/freeLesson/freeLessonSlice";
-import EditorJS from "../components/Editor";
+  resetState,
+} from "../../features/freeLesson/freeLessonSlice";
+import EditorJS from "../../components/Editor";
 
 const INITIAL_DATA = {
   time: new Date().getTime(),
@@ -36,10 +37,11 @@ const AddFreeLesson = () => {
   const [content, setContent] = useState(INITIAL_DATA);
   const [editorKey, setEditorKey] = useState(0);
 
-
   useEffect(() => {
     if (lessonId !== undefined) {
       dispatch(getAFreeLesson(lessonId));
+    } else {
+      dispatch(resetState());
     }
   }, [dispatch, lessonId]);
 
@@ -70,7 +72,9 @@ const AddFreeLesson = () => {
           if (error === "Request failed with status code 404") {
             toast.error(`Free lesson with id ${lessonId} not found`);
           } else if (error === "Network Error") {
-            toast.error("There was a problem with the server. Please try again later.");
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
           } else {
             toast.error("An unknown error occurred.");
           }
@@ -84,7 +88,9 @@ const AddFreeLesson = () => {
         })
         .catch((error) => {
           if (error === "Network Error") {
-            toast.error("There was a problem with the server. Please try again later.");
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
           } else {
             toast.error("An unknown error occurred.");
           }
@@ -93,8 +99,6 @@ const AddFreeLesson = () => {
       setEditorKey((prevKey) => prevKey + 1); // Reset editor key after submission
     }
   };
-
- 
 
   return (
     <>

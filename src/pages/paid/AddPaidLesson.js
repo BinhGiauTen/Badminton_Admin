@@ -2,8 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { useLocation, useNavigate } from "react-router-dom";
-import EditorJS from "../components/Editor";
-import { createPaidLesson, getAPaidLesson, updatePaidLesson } from "../features/paidLesson/paidLessonSlice";
+import EditorJS from "../../components/Editor";
+import {
+  createPaidLesson,
+  getAPaidLesson,
+  resetState,
+  updatePaidLesson,
+} from "../../features/paidLesson/paidLessonSlice";
 
 const INITIAL_DATA = {
   time: new Date().getTime(),
@@ -32,10 +37,11 @@ const AddPaidLesson = () => {
   const [content, setContent] = useState(INITIAL_DATA);
   const [editorKey, setEditorKey] = useState(0);
 
-
   useEffect(() => {
     if (lessonId !== undefined) {
       dispatch(getAPaidLesson(lessonId));
+    } else {
+      dispatch(resetState());
     }
   }, [dispatch, lessonId]);
 
@@ -56,6 +62,7 @@ const AddPaidLesson = () => {
 
     if (!isAddLesson) {
       const updateData = { id: lessonId, paidLessonData: data };
+      console.log("Update data: ", updateData);
       dispatch(updatePaidLesson(updateData))
         .unwrap()
         .then(() => {
@@ -66,7 +73,9 @@ const AddPaidLesson = () => {
           if (error === "Request failed with status code 404") {
             toast.error(`Paid lesson with id ${lessonId} not found`);
           } else if (error === "Network Error") {
-            toast.error("There was a problem with the server. Please try again later.");
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
           } else {
             toast.error("An unknown error occurred.");
           }
@@ -80,7 +89,9 @@ const AddPaidLesson = () => {
         })
         .catch((error) => {
           if (error === "Network Error") {
-            toast.error("There was a problem with the server. Please try again later.");
+            toast.error(
+              "There was a problem with the server. Please try again later."
+            );
           } else {
             toast.error("An unknown error occurred.");
           }
@@ -89,8 +100,6 @@ const AddPaidLesson = () => {
       setEditorKey((prevKey) => prevKey + 1); // Reset editor key after submission
     }
   };
-
- 
 
   return (
     <>

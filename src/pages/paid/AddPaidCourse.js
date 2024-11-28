@@ -1,40 +1,31 @@
 import React, { useEffect, useState } from "react";
-import CustomInput from "../components/CustomInput";
+import CustomInput from "../../components/CustomInput";
 import { Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  getAFreeCourse,
-  createFreeCourse,
-  resetState,
-  updateFreeCourse,
-} from "../features/freeCourse/freeCourseSlice";
-import { getAllCategory } from "../features/category/categorySlice";
+import { getAllCategory } from "../../features/category/categorySlice";
 import {
   createPaidCourse,
   getAPaidCourse,
+  resetState,
   updatePaidCourse,
-} from "../features/paidCourse/paidCourseSlice";
+} from "../../features/paidCourse/paidCourseSlice";
 
-const freeSchema = yup.object().shape({
+const paidSchema = yup.object().shape({
   name: yup.string().required("Course name is required"),
   description: yup.string().required("Description is required"),
   categoryId: yup.number().required("Category is required"),
-  type: yup.string().oneOf(["free", "paid"]).required("Type is required"),
+  price: yup.string().required("Price is required"),
+  status: yup
+    .string()
+    .oneOf(["publish", "non-publish"])
+    .required("Status is required"),
 });
 
-const paidSchema = freeSchema.concat(
-  yup.object().shape({
-    price: yup.string().required("Price is required"),
-    status: yup.string().oneOf(["publish", "non-publish"]).required("Status is required"),
-  })
-);
-
-const AddCourse = () => {
-  const [type, setType] = useState("free");
+const AddPaidCourse = () => {
   const [status, setStatus] = useState("non-publish");
   const dispatch = useDispatch();
   const location = useLocation();
@@ -44,84 +35,55 @@ const AddCourse = () => {
 
   const pathParts = location.pathname.split("/");
   const courseId = pathParts[3];
-  const isFreeCourse = pathParts.includes("free-course");
   const isPaidCourse = pathParts.includes("paid-course");
 
-  const freeCourse = useSelector((state) => state?.freeCourse?.freeCourse);
   const paidCourse = useSelector((state) => state?.paidCourse?.paidCourse);
   const userState = useSelector((state) => state?.user?.user);
 
   useEffect(() => {
-    if (isFreeCourse && courseId) {
-      dispatch(getAFreeCourse(courseId));
-      setType("free");
-    } else if (isPaidCourse && courseId) {
+    if (isPaidCourse && courseId) {
       dispatch(getAPaidCourse(courseId));
-      setType("paid");
-    } else {
-      dispatch(resetState());
+    }else {
+        dispatch(resetState());
     }
-  }, [dispatch, courseId, isFreeCourse, isPaidCourse]);
+  }, [dispatch, courseId, isPaidCourse]);
 
-  const validationSchema = type === "free" ? freeSchema : paidSchema;
+  const validationSchema = paidSchema;
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: freeCourse?.name || paidCourse?.name || "",
-      description: freeCourse?.description || paidCourse?.description || "",
-      categoryId: freeCourse?.categoryId || paidCourse?.categoryId || 0,
-      type: freeCourse?.type || paidCourse?.type || "free",
+      name: paidCourse?.name || "",
+      description: paidCourse?.description || "",
+      categoryId: paidCourse?.categoryId || 0,
       status: paidCourse?.status || "non-publish",
       price: paidCourse?.price || "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      const freeData = {
-        ...values,
-        categoryId: Number(values.categoryId),
-        thumbnail:
-          "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
-      };
       const paidData = {
         ...values,
+        type: "paid",
         categoryId: Number(values.categoryId),
         coachId: userState.id,
         thumbnail:
           "https://blog.playo.co/wp-content/uploads/2017/12/badminton-coaching-in-bangalore.jpg",
       };
-      if (isFreeCourse && courseId) {
-        dispatch(updateFreeCourse({ id: courseId, freeCourseData: freeData }))
-          .unwrap()
-          .then(() => {
-            toast.success("Free course updated successfully");
-            navigate("/dashboard/courses");
-          })
-          .catch(handleError);
-      } else if (isPaidCourse && courseId) {
+      if (isPaidCourse && courseId) {
         dispatch(updatePaidCourse({ id: courseId, paidCourseData: paidData }))
           .unwrap()
           .then(() => {
             toast.success("Paid course updated successfully");
-            navigate("/dashboard/courses");
+            navigate("/dashboard/paid-courses");
           })
           .catch(handleError);
-      } else if (type === "free") {
-        dispatch(createFreeCourse(freeData))
-          .unwrap()
-          .then(() => {
-            toast.success("Free course created successfully");
-            navigate("/dashboard/courses");
-          })
-          .catch(handleError);
-        formik.resetForm();
       } else {
         console.log("Paid data create:", paidData);
         dispatch(createPaidCourse(paidData))
           .unwrap()
           .then(() => {
             toast.success("Paid course created successfully");
-            navigate("/dashboard/courses");
+            navigate("/dashboard/paid-courses");
           })
           .catch(handleError);
         formik.resetForm();
@@ -148,29 +110,10 @@ const AddCourse = () => {
   return (
     <>
       <h3 className="mb-4 title">
-        {courseId !== undefined ? "Edit" : "Add"}{" "}
-        {type === "free" ? "Free" : "Paid"} Course
+        {courseId !== undefined ? "Edit" : "Add"} Paid Course
       </h3>
       <div className="">
         <form action="" onSubmit={formik.handleSubmit}>
-          <select
-            name="type"
-            onChange={(e) => {
-              const selectedType = e.target.value;
-              setType(selectedType);
-              formik.setFieldValue("type", selectedType);
-            }}
-            onBlur={formik.handleBlur("type")}
-            value={formik.values.type}
-            className="form-control py-3 mb-3"
-            id="type"
-            disabled={courseId !== undefined}
-          >
-            <option value="">Select Type</option>
-            <option value="free">Free</option>
-            <option value="paid">Paid</option>
-          </select>
-
           <CustomInput
             type="text"
             label="Course Name"
@@ -222,57 +165,51 @@ const AddCourse = () => {
             })}
           </select>
 
-          {type === "paid" ? (
-            <>
-              <div>
-                <CustomInput
-                  type="text"
-                  label="Price"
-                  name="price"
-                  id="price"
-                  onCh={formik.handleChange("price")}
-                  onBl={formik.handleBlur("price")}
-                  val={formik.values.price}
-                />
-                <div className="error">
-                  {formik.touched.price && formik.errors.price ? (
-                    <div>{formik.errors.price}</div>
-                  ) : null}
-                </div>
-              </div>
-              <br/>
+          <div>
+            <CustomInput
+              type="text"
+              label="Price"
+              name="price"
+              id="price"
+              onCh={formik.handleChange("price")}
+              onBl={formik.handleBlur("price")}
+              val={formik.values.price}
+            />
+            <div className="error">
+              {formik.touched.price && formik.errors.price ? (
+                <div>{formik.errors.price}</div>
+              ) : null}
+            </div>
+          </div>
+          <br />
 
-              <select
-                name="status"
-                onChange={(e) => {
-                  const selectedStatus = e.target.value;
-                  setStatus(selectedStatus);
-                  formik.setFieldValue("status", selectedStatus);
-                }}
-                onBlur={formik.handleBlur("status")}
-                value={formik.values.status}
-                className="form-control py-3 mb-3"
-                id="status"
-              >
-                <option value="">Select Status</option>
-                <option value="non-publish">non-publish</option>
-                <option value="publish">publish</option>
-              </select>
-            </>
-          ) : (
-            ""
-          )}
+          <select
+            name="status"
+            onChange={(e) => {
+              const selectedStatus = e.target.value;
+              setStatus(selectedStatus);
+              formik.setFieldValue("status", selectedStatus);
+            }}
+            onBlur={formik.handleBlur("status")}
+            value={formik.values.status}
+            className="form-control py-3 mb-3"
+            id="status"
+          >
+            <option value="">Select Status</option>
+            <option value="non-publish">non-publish</option>
+            <option value="publish">publish</option>
+          </select>
 
           <button
             className="btn btn-success border-0 rounded-3 my-3"
             type="submit"
           >
             {courseId !== undefined ? "Edit" : "Add"}{" "}
-            {type === "free" ? "Free" : "Paid"} Course
+            Paid Course
           </button>
         </form>
       </div>
     </>
   );
 };
-export default AddCourse;
+export default AddPaidCourse;

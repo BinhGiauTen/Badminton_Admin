@@ -6,9 +6,9 @@ import { BiEdit } from "react-icons/bi";
 import { IoIosMore } from "react-icons/io";
 import {
   getAllFreeCourse,
-} from "../features/freeCourse/freeCourseSlice";
+} from "../../features/freeCourse/freeCourseSlice";
 
-const FreeCourseTable = () => {
+const FreeCourses = () => {
   const userState = useSelector((state) => state?.user?.user);
   const dispatch = useDispatch();
 
@@ -78,6 +78,7 @@ const FreeCourseTable = () => {
 
   return (
     <>
+      <h3>Free Courses</h3>
       <Table
         columns={columns}
         dataSource={dataFree}
@@ -87,4 +88,4 @@ const FreeCourseTable = () => {
   );
 };
 
-export default FreeCourseTable;
+export default FreeCourses;

@@ -28,6 +28,8 @@ const updatePaidCourse = async (paidCourse) => {
         coachId: paidCourse.paidCourseData.coachId,
         categoryId: paidCourse.paidCourseData.category,
         lessonQuantity: paidCourse.paidCourseData.lessonQuantity,
+        price: paidCourse.paidCourseData.price,
+        status: paidCourse.paidCourseData.status,
     },
     config
   );
@@ -69,9 +71,9 @@ const getPaidCourseByCategoryId = async (categoryId) => {
     return response.data;
   };
 
-const deletePaidCourse = async (paidCourseId, coachId) => {
+const deletePaidCourse = async (paidCourseId) => {
   const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `paid-courses/${paidCourseId}/${coachId}`,
+    process.env.REACT_APP_BASE_URL + `paid-courses/${paidCourseId}`,
     config
   );
   return response.data;

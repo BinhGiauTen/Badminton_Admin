@@ -144,12 +144,12 @@ const CourseDetail = () => {
   const handleDeleteCourse = () => {
     if (isFreeCourse) {
       dispatch(deleteFreeCourse(courseId)).then(() => {
-        navigate("/dashboard/courses");
+        navigate("/dashboard/free-courses");
         hideModal();
       });
     } else {
       dispatch(deletePaidCourse(courseId)).then(() => {
-        navigate("/dashboard/courses");
+        navigate("/dashboard/paid-courses");
         hideModal();
       });
     }
@@ -211,7 +211,7 @@ const CourseDetail = () => {
         .unwrap()
         .then(() => {
           toast.success("Uploaded thumbnail successfully.");
-          dispatch(getAFreeCourse(courseId));
+          dispatch(getAPaidCourse(courseId));
         })
         .catch((error) => {
           if (error === "Request failed with status code 404") {

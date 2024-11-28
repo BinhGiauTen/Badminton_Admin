@@ -8,9 +8,9 @@ import { IoIosMore } from "react-icons/io";
 import {
   getAllPaidCourse,
   getPaidCourseByCoachId,
-} from "../features/paidCourse/paidCourseSlice";
+} from "../../features/paidCourse/paidCourseSlice";
 
-const PaidCourseTable = () => {
+const PaidCourses = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.user?.user);
 
@@ -23,31 +23,40 @@ const PaidCourseTable = () => {
   }, [dispatch, userState?.role, userState?.id]);
 
   const paidCourseState = useSelector(
-    (state) => state?.paidCourse?.paidCourses?.data
+    (state) =>
+      state?.paidCourse?.paidCourses?.data || state?.paidCourse?.paidCourses
   );
+  console.log("Paid course:", paidCourseState);
   const dataPaid = paidCourseState?.map((course, index) => ({
     key: index + 1,
-    name: course?.name,
-    description: course?.description,
-    thumbnail: course?.thumbnail,
-    lessonQuantity: course?.lessonQuantity,
-    price: course?.price,
-    categoryId: course?.categoryId,
-    type: course?.type,
+    name: course?.name || course?.paid_course?.name,
+    description: course?.description || course?.paid_course?.description,
+    thumbnail: course?.thumbnail || course?.paid_course?.thumbnail,
+    lessonQuantity:
+      course?.lessonQuantity || course?.paid_course?.lessonQuantity,
+    price: course?.price || course?.paid_course?.price,
+    categoryId: course?.categoryId || course?.paid_course?.categoryId,
+    type: course?.type || course?.paid_course?.type,
     action: (
       <>
         <Link
           className="ms-2 fs-3 text-info bg-transparent border-0"
-          to={`/dashboard/paid-course/${course.id}/course-detail`}
+          to={`/dashboard/paid-course/${
+            course.id || course?.paid_course?.id
+          }/course-detail`}
         >
           <IoIosMore />
         </Link>
-        <Link
-          className="ms-2 fs-3 text-warning bg-transparent border-0"
-          to={`/dashboard/paid-course/${course.id}`}
-        >
-          <BiEdit />
-        </Link>
+        {userState?.role !== "admin" ? (
+          <Link
+            className="ms-2 fs-3 text-warning bg-transparent border-0"
+            to={`/dashboard/paid-course/${
+              course.id || course?.paid_course?.id
+            }`}
+          >
+            <BiEdit />
+          </Link>
+        ) : null}
       </>
     ),
   }));
@@ -60,7 +69,7 @@ const PaidCourseTable = () => {
       dataIndex: "description",
       render: (text) => (
         <Tooltip title={text}>
-          {text.length > 40 ? `${text.slice(0, 40)}...` : text}
+          {text?.length > 40 ? `${text.slice(0, 40)}...` : text}
         </Tooltip>
       ),
     },
@@ -84,6 +93,7 @@ const PaidCourseTable = () => {
 
   return (
     <>
+      <h3>Paid Courses</h3>
       <Table
         columns={columns}
         dataSource={dataPaid}
@@ -93,4 +103,4 @@ const PaidCourseTable = () => {
   );
 };
 
-export default PaidCourseTable;
+export default PaidCourses;

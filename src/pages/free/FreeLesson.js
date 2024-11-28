@@ -2,7 +2,7 @@ import React from "react";
 import editorjsHTML from "editorjs-html";
 import { useSelector } from "react-redux";
 
-const Lesson = () => {
+const FreeLesson = () => {
   const lessonState = useSelector((state)=> state?.freeLesson?.freeLesson);
   const edjsParser = editorjsHTML(); 
   const renderHtmlContent = edjsParser.parse(lessonState?.content).join("");
@@ -14,4 +14,4 @@ const Lesson = () => {
   );
 };
 
-export default Lesson;
+export default FreeLesson;

@@ -14,13 +14,16 @@ import { useContext } from "react";
 import AuthContext from "./context/AuthContext";
 import Categories from "./pages/Categories";
 import AddCategory from "./pages/AddCategory";
-import AddFreeLesson from "./pages/AddFreeLesson";
+import AddFreeLesson from "./pages/free/AddFreeLesson";
 import Register from "./pages/auth/Register";
-import Courses from "./pages/Courses";
-import AddCourse from "./pages/AddCourse";
 import CourseDetail from "./pages/CourseDetail";
-import AddPaidLesson from "./pages/AddPaidLesson";
-import Lesson from "./pages/Lesson";
+import AddPaidLesson from "./pages/paid/AddPaidLesson";
+import FreeCourses from "./pages/free/FreeCourses";
+import PaidCourses from "./pages/paid/PaidCourses";
+import AddPaidCourse from "./pages/paid/AddPaidCourse";
+import AddFreeCourse from "./pages/free/AddFreeCourse";
+import FreeLesson from "./pages/free/FreeLesson";
+import PaidLesson from "./pages/paid/PaidLesson";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -34,16 +37,18 @@ function App() {
               <Route index element={<Dashboard />} />
               <Route path="coaches" element={<Coaches />} />
               <Route path="users" element={<Users />} />
-              <Route path="courses" element={<Courses />} />
-              <Route path="course" element={<AddCourse />} />
-              <Route path="free-course/:id" element={<AddCourse />} />
-              <Route path="paid-course/:id" element={<AddCourse />} />
+              <Route path="free-courses" element={<FreeCourses />} />
+              <Route path="paid-courses" element={<PaidCourses />} />
+              <Route path="free-course" element={<AddFreeCourse />} />
+              <Route path="free-course/:id" element={<AddFreeCourse />} />
+              <Route path="paid-course" element={<AddPaidCourse />} />
+              <Route path="paid-course/:id" element={<AddPaidCourse />} />
               <Route path="free-course/:id/course-detail" element={<CourseDetail />} />
               <Route path="paid-course/:id/course-detail" element={<CourseDetail />} />
               <Route path="free-course/:id/add-lesson" element={<AddFreeLesson />} />
               <Route path="paid-course/:id/add-lesson" element={<AddPaidLesson />} />
-              <Route path="free-course/:id/preview-lesson" element={<Lesson />} />
-              <Route path="paid-course/:id/preview-lesson" element={<Lesson />} />
+              <Route path="free-course/:id/preview-lesson" element={<FreeLesson />} />
+              <Route path="paid-course/:id/preview-lesson" element={<PaidLesson />} />
               <Route path="free-course/:id/lesson/:id" element={<AddFreeLesson />} />
               <Route path="paid-course/:id/lesson/:id" element={<AddPaidLesson />} />
               <Route path="categories" element={<Categories />} />

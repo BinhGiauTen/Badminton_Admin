@@ -62,7 +62,9 @@ const MainLayout = () => {
         <div className="demo-logo-vertical" />
         <div className="logo">
           <h2 className="text-white fs-5 text-center py-3 mb-0">
-            <span className="lg-logo">Badminton {userState?.role === "admin" ? "Admin" : "Coach" }</span>
+            <span className="lg-logo">
+              Badminton {userState?.role === "admin" ? "Admin" : "Coach"}
+            </span>
             <span className="sm-logo">BA</span>
           </h2>
         </div>
@@ -94,42 +96,48 @@ const MainLayout = () => {
                     icon: <FaClipboardList className="fs-4" />,
                     label: "Users",
                   },
+                  {
+                    key: "course-list",
+                    icon: <FaBloggerB className="fs-4" />,
+                    label: "Courses",
+                    children: [
+                      {
+                        key: "free-course",
+                        icon: <ImBlog className="fs-4" />,
+                        label: "Add Free Course",
+                      },
+                      {
+                        key: "free-courses",
+                        icon: <FaBloggerB className="fs-4" />,
+                        label: "Free Courses",
+                      },
+                      {
+                        key: "paid-courses",
+                        icon: <FaBloggerB className="fs-4" />,
+                        label: "Paid Courses",
+                      },
+                    ],
+                  },
                 ]
-              : []),
-            {
-              key: "course-list",
-              icon: <FaBloggerB className="fs-4" />,
-              label: "Courses",
-              children: [
-                {
-                  key: "course",
-                  icon: <ImBlog className="fs-4" />,
-                  label: "Add Course",
-                },
-                {
-                  key: "courses",
-                  icon: <FaBloggerB className="fs-4" />,
-                  label: "Courses",
-                },
-              ],
-            },
-            // {
-            //   key: "lesson-list",
-            //   icon: <FaBloggerB className="fs-4" />,
-            //   label: "Lessons",
-            //   children: [
-            //     {
-            //       key: "free-lesson",
-            //       icon: <ImBlog className="fs-4" />,
-            //       label: "Add Free Lesson",
-            //     },
-            //     {
-            //       key: "lessons",
-            //       icon: <FaBloggerB className="fs-4" />,
-            //       label: "Lessons",
-            //     },
-            //   ],
-            // },
+              : [
+                  {
+                    key: "course-list",
+                    icon: <FaBloggerB className="fs-4" />,
+                    label: "Courses",
+                    children: [
+                      {
+                        key: "paid-course",
+                        icon: <ImBlog className="fs-4" />,
+                        label: "Add Paid Course",
+                      },
+                      {
+                        key: "paid-courses",
+                        icon: <FaBloggerB className="fs-4" />,
+                        label: "Paid Courses",
+                      },
+                    ],
+                  },
+                ]),
             {
               key: "category-list",
               icon: <FaBloggerB className="fs-4" />,

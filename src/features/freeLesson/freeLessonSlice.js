@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk  } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import freeLessonService from "./freeLessonService";
 
 const initialState = {
@@ -8,7 +8,6 @@ const initialState = {
   isSuccess: false,
   message: "",
 };
-
 
 export const getAFreeLesson = createAsyncThunk(
   "lesson/get-a-free-lesson",
@@ -47,28 +46,29 @@ export const updateFreeLesson = createAsyncThunk(
 );
 
 export const deleteFreeLesson = createAsyncThunk(
-    "lesson/delete-free-lesson",
-    async (freeLessonId, thunkAPI) => {
-      try {
-        return await freeLessonService.deleteFreeLesson(freeLessonId);
-      } catch (error) {
-        const message = error.message || "Network Error";
-        return thunkAPI.rejectWithValue(message);
-      }
+  "lesson/delete-free-lesson",
+  async (freeLessonId, thunkAPI) => {
+    try {
+      return await freeLessonService.deleteFreeLesson(freeLessonId);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
     }
-  );
+  }
+);
 
-  export const uploadImageLesson = createAsyncThunk(
-    "lesson/upload-image-free-lesson",
-    async (file, thunkAPI) => {
-      try {
-        return await freeLessonService.uploadImageLesson(file);
-      } catch (error) {
-        return thunkAPI.rejectWithValue(error);
-      }
+export const uploadImageLesson = createAsyncThunk(
+  "lesson/upload-image-free-lesson",
+  async (file, thunkAPI) => {
+    try {
+      return await freeLessonService.uploadImageLesson(file);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
     }
-  );
+  }
+);
 
+export const resetState = createAction("Reset_all");
 
 export const freeLessonSlice = createSlice({
   name: "freeLessons",
@@ -151,6 +151,8 @@ export const freeLessonSlice = createSlice({
         state.isSuccess = false;
         state.message = action.error;
       })
+
+      .addCase(resetState, () => initialState);
   },
 });
 
