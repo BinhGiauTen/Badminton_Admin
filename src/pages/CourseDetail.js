@@ -21,7 +21,10 @@ import {
   updatePaidCourseThumbnail,
 } from "../features/paidCourse/paidCourseSlice";
 import { toast } from "react-toastify";
-import { deletePaidLesson, getAPaidLesson } from "../features/paidLesson/paidLessonSlice";
+import {
+  deletePaidLesson,
+  getAPaidLesson,
+} from "../features/paidLesson/paidLessonSlice";
 
 const { Title, Text } = Typography;
 
@@ -37,6 +40,7 @@ const CourseDetail = () => {
   const courseId = pathParts[3];
   const isFreeCourse = pathParts.includes("free-course");
   const isPaidCourse = pathParts.includes("paid-course");
+  const userState = useSelector((state) => state?.user?.user);
 
   const course = useSelector((state) =>
     isFreeCourse ? state?.freeCourse?.freeCourse : state?.paidCourse?.paidCourse
@@ -80,6 +84,7 @@ const CourseDetail = () => {
             icon={<FaEye />}
             onClick={() => handleClickPreview(record.id)}
           />
+
           {isFreeCourse ? (
             <Link
               className="ms-2 fs-3 text-warning bg-transparent border-0"
@@ -156,28 +161,27 @@ const CourseDetail = () => {
   };
 
   const handleClickAddLesson = () => {
-    if(isFreeCourse){
+    if (isFreeCourse) {
       navigate(`/dashboard/free-course/${courseId}/add-lesson`);
-    }else{
+    } else {
       navigate(`/dashboard/paid-course/${courseId}/add-lesson`);
     }
   };
 
   const handleClickPreview = (lessonId) => {
-    if(isFreeCourse){
+    if (isFreeCourse) {
       dispatch(getAFreeLesson(lessonId))
-      .unwrap()
-      .then(() =>
-        navigate(`/dashboard/free-course/${courseId}/preview-lesson`)
-      );
-    }else{
+        .unwrap()
+        .then(() =>
+          navigate(`/dashboard/free-course/${courseId}/preview-lesson`)
+        );
+    } else {
       dispatch(getAPaidLesson(lessonId))
-      .unwrap()
-      .then(() =>
-        navigate(`/dashboard/paid-course/${courseId}/preview-lesson`)
-      );
+        .unwrap()
+        .then(() =>
+          navigate(`/dashboard/paid-course/${courseId}/preview-lesson`)
+        );
     }
-    
   };
 
   const handleFileChange = (e) => {
@@ -245,6 +249,12 @@ const CourseDetail = () => {
             <div className="course-meta">
               <Text strong>Status:</Text> {course?.status}
             </div>
+            <div className="course-meta">
+              <Text strong>Star:</Text> {course?.star}
+            </div>
+            <div className="course-meta">
+              <Text strong>Student Quantity:</Text> {course?.studentQuantity}
+            </div>
           </>
         ) : null}
         <Divider />
@@ -255,12 +265,14 @@ const CourseDetail = () => {
             alt="Course Thumbnail"
             className="thumbnail-image"
           />
+
           <input
             style={{ marginLeft: "10px" }}
             type="file"
             onChange={handleFileChange}
           />
         </div>
+
         <div className="d-flex mt-4">
           <Button
             type="primary"

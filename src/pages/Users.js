@@ -36,10 +36,10 @@ const Users = () => {
       title: "Date of birth",
       dataIndex: "dob",
     },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-    },
+    // {
+    //   title: "Gender",
+    //   dataIndex: "gender",
+    // },
     {
       title: "Action",
       dataIndex: "action",
@@ -55,11 +55,11 @@ const Users = () => {
   for (let i = 0; i < userState?.length; i++) {
     data.push({
       key: i + 1,
-      first_name: userState[i]?.first_name,
-      last_name: userState[i]?.last_name,
+      first_name: userState[i]?.firstName,
+      last_name: userState[i]?.lastName,
       email: userState[i]?.email,
       dob: userState[i]?.dob,
-      gender: userState[i]?.gender,
+      // gender: userState[i]?.gender,
       action: (
         <>
           <button

@@ -14,7 +14,8 @@ const updatePaidLesson = async (paidLesson) => {
   const response = await axios.patch(
     process.env.REACT_APP_BASE_URL + `paid-lessons/${paidLesson.id}`,
     {
-        content: paidLesson.freeLessonData.content,
+        content: paidLesson.paidLessonData.content,
+        paidCourseId: paidLesson.paidLessonData.paidCourseId
     },
     config
   );

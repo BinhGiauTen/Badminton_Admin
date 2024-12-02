@@ -62,7 +62,6 @@ const AddPaidLesson = () => {
 
     if (!isAddLesson) {
       const updateData = { id: lessonId, paidLessonData: data };
-      console.log("Update data: ", updateData);
       dispatch(updatePaidLesson(updateData))
         .unwrap()
         .then(() => {

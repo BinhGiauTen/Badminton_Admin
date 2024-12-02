@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete } from "react-icons/ai";
 import CustomModal from "../components/CustomModal";
 import { deleteCoach, getAllCoach } from "../features/admin/adminSlice";
+import { format } from "date-fns";
 
 const Coaches = () => {
   const [open, setOpen] = useState(false);
@@ -23,7 +24,8 @@ const Coaches = () => {
     {
       title: "First Name",
       dataIndex: "first_name",
-    },{
+    },
+    {
       title: "Last Name",
       dataIndex: "last_name",
     },
@@ -35,10 +37,10 @@ const Coaches = () => {
       title: "Date of birth",
       dataIndex: "dob",
     },
-    {
-      title: "Gender",
-      dataIndex: "gender",
-    },
+    // {
+    //   title: "Gender",
+    //   dataIndex: "gender",
+    // },
     {
       title: "Action",
       dataIndex: "action",
@@ -53,11 +55,13 @@ const Coaches = () => {
   for (let i = 0; i < coachState?.length; i++) {
     data.push({
       key: i + 1,
-      first_name: coachState[i]?.first_name,
-      last_name: coachState[i]?.last_name,
+      first_name: coachState[i]?.firstName,
+      last_name: coachState[i]?.lastName,
       email: coachState[i].email,
-      dob: coachState[i].dob,
-      gender: coachState[i].gender,
+      dob: coachState[i].dob
+        ? format(new Date(coachState[i].dob), "dd/MM/yyyy")
+        : format(new Date(coachState[i].created_at), "dd/MM/yyyy"),
+      // gender: coachState[i].gender ,
       action: (
         <>
           <button
@@ -96,4 +100,3 @@ const Coaches = () => {
 };
 
 export default Coaches;
-

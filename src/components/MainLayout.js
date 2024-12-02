@@ -8,6 +8,7 @@ import {
 import { MdCircleNotifications } from "react-icons/md";
 import { Outlet } from "react-router-dom";
 import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaAtlas } from "react-icons/fa";
 import { ImBlog } from "react-icons/im";
 import { Layout, Menu, Button, theme } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -98,7 +99,7 @@ const MainLayout = () => {
                   },
                   {
                     key: "course-list",
-                    icon: <FaBloggerB className="fs-4" />,
+                    icon: <FaAtlas className="fs-4" />,
                     label: "Courses",
                     children: [
                       {
@@ -108,12 +109,12 @@ const MainLayout = () => {
                       },
                       {
                         key: "free-courses",
-                        icon: <FaBloggerB className="fs-4" />,
+                        icon: <FaAtlas className="fs-4" />,
                         label: "Free Courses",
                       },
                       {
                         key: "paid-courses",
-                        icon: <FaBloggerB className="fs-4" />,
+                        icon: <FaAtlas className="fs-4" />,
                         label: "Paid Courses",
                       },
                     ],
@@ -122,7 +123,7 @@ const MainLayout = () => {
               : [
                   {
                     key: "course-list",
-                    icon: <FaBloggerB className="fs-4" />,
+                    icon: <FaAtlas className="fs-4" />,
                     label: "Courses",
                     children: [
                       {
@@ -132,7 +133,7 @@ const MainLayout = () => {
                       },
                       {
                         key: "paid-courses",
-                        icon: <FaBloggerB className="fs-4" />,
+                        icon: <FaAtlas className="fs-4" />,
                         label: "Paid Courses",
                       },
                     ],
