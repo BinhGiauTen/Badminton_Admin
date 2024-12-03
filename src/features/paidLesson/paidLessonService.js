@@ -15,6 +15,7 @@ const updatePaidLesson = async (paidLesson) => {
     process.env.REACT_APP_BASE_URL + `paid-lessons/${paidLesson.id}`,
     {
         content: paidLesson.paidLessonData.content,
+        name: paidLesson.paidLessonData.name,
         paidCourseId: paidLesson.paidLessonData.paidCourseId
     },
     config

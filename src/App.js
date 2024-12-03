@@ -24,6 +24,8 @@ import AddPaidCourse from "./pages/paid/AddPaidCourse";
 import AddFreeCourse from "./pages/free/AddFreeCourse";
 import FreeLesson from "./pages/free/FreeLesson";
 import PaidLesson from "./pages/paid/PaidLesson";
+import AddFreeQuestion from "./pages/free/AddFreeQuestion";
+import AddPaidQuestion from "./pages/paid/AddPaidQuestion";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -40,17 +42,21 @@ function App() {
               <Route path="free-courses" element={<FreeCourses />} />
               <Route path="paid-courses" element={<PaidCourses />} />
               <Route path="free-course" element={<AddFreeCourse />} />
-              <Route path="free-course/:id" element={<AddFreeCourse />} />
+              <Route path="free-course/:courseId" element={<AddFreeCourse />} />
               <Route path="paid-course" element={<AddPaidCourse />} />
-              <Route path="paid-course/:id" element={<AddPaidCourse />} />
-              <Route path="free-course/:id/course-detail" element={<CourseDetail />} />
-              <Route path="paid-course/:id/course-detail" element={<CourseDetail />} />
-              <Route path="free-course/:id/add-lesson" element={<AddFreeLesson />} />
-              <Route path="paid-course/:id/add-lesson" element={<AddPaidLesson />} />
-              <Route path="free-course/:id/preview-lesson" element={<FreeLesson />} />
-              <Route path="paid-course/:id/preview-lesson" element={<PaidLesson />} />
-              <Route path="free-course/:id/lesson/:id" element={<AddFreeLesson />} />
-              <Route path="paid-course/:id/lesson/:id" element={<AddPaidLesson />} />
+              <Route path="paid-course/:courseId" element={<AddPaidCourse />} />
+              <Route path="free-course/:courseId/course-detail" element={<CourseDetail />} />
+              <Route path="paid-course/:courseId/course-detail" element={<CourseDetail />} />
+              <Route path="free-course/:courseId/add-lesson" element={<AddFreeLesson />} />
+              <Route path="paid-course/:courseId/add-lesson" element={<AddPaidLesson />} />
+              <Route path="free-course/:courseId/preview-lesson/:lessonId" element={<FreeLesson />} />
+              <Route path="paid-course/:courseId/preview-lesson/:lessonId" element={<PaidLesson />} />
+              <Route path="free-course/:courseId/preview-lesson/:lessonId/add-question" element={<AddFreeQuestion />} />
+              <Route path="free-course/:courseId/preview-lesson/:lessonId/question/:questionId" element={<AddFreeQuestion />} />
+              <Route path="paid-course/:courseId/preview-lesson/:lessonId/add-question" element={<AddPaidQuestion />} />
+              <Route path="paid-course/:courseId/preview-lesson/:lessonId/question/:questionId" element={<AddPaidQuestion />} />
+              <Route path="free-course/:courseId/lesson/:id" element={<AddFreeLesson />} />
+              <Route path="paid-course/:courseId/lesson/:id" element={<AddPaidLesson />} />
               <Route path="categories" element={<Categories />} />
               <Route path="category" element={<AddCategory />} />
               <Route path="category/:id" element={<AddCategory />} />

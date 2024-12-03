@@ -15,6 +15,7 @@ const updateFreeLesson = async (freeLesson) => {
     process.env.REACT_APP_BASE_URL + `lessons/free/${freeLesson.id}`,
     {
         content: freeLesson.freeLessonData.content,
+        name: freeLesson.freeLessonData.name,
     },
     config
   );

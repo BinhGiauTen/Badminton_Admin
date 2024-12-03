@@ -41,6 +41,7 @@ const CourseDetail = () => {
   const isFreeCourse = pathParts.includes("free-course");
   const isPaidCourse = pathParts.includes("paid-course");
   const userState = useSelector((state) => state?.user?.user);
+  const isAdmin = userState?.role === "admin";
 
   const course = useSelector((state) =>
     isFreeCourse ? state?.freeCourse?.freeCourse : state?.paidCourse?.paidCourse
@@ -84,28 +85,24 @@ const CourseDetail = () => {
             icon={<FaEye />}
             onClick={() => handleClickPreview(record.id)}
           />
-
-          {isFreeCourse ? (
-            <Link
-              className="ms-2 fs-3 text-warning bg-transparent border-0"
-              to={`/dashboard/free-course/${courseId}/lesson/${record.id}`}
-            >
-              <BiEdit />
-            </Link>
-          ) : (
-            <Link
-              className="ms-2 fs-3 text-warning bg-transparent border-0"
-              to={`/dashboard/paid-course/${courseId}/lesson/${record.id}`}
-            >
-              <BiEdit />
-            </Link>
+          {(!isAdmin || (isAdmin && isFreeCourse)) && (
+            <>
+              <Link
+                className="ms-2 fs-3 text-warning bg-transparent border-0"
+                to={`/dashboard/${
+                  isFreeCourse ? "free-course" : "paid-course"
+                }/${courseId}/lesson/${record.id}`}
+              >
+                <BiEdit />
+              </Link>
+              <Button
+                className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
+                type="link"
+                icon={<AiFillDelete />}
+                onClick={() => showDeleteLessonModal(record.id)}
+              />
+            </>
           )}
-          <Button
-            className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
-            type="link"
-            icon={<AiFillDelete />}
-            onClick={() => showDeleteLessonModal(record.id)}
-          />
         </Space>
       ),
     },
@@ -173,13 +170,13 @@ const CourseDetail = () => {
       dispatch(getAFreeLesson(lessonId))
         .unwrap()
         .then(() =>
-          navigate(`/dashboard/free-course/${courseId}/preview-lesson`)
+          navigate(`/dashboard/free-course/${courseId}/preview-lesson/${lessonId}`)
         );
     } else {
       dispatch(getAPaidLesson(lessonId))
         .unwrap()
         .then(() =>
-          navigate(`/dashboard/paid-course/${courseId}/preview-lesson`)
+          navigate(`/dashboard/paid-course/${courseId}/preview-lesson/${lessonId}`)
         );
     }
   };
@@ -266,11 +263,13 @@ const CourseDetail = () => {
             className="thumbnail-image"
           />
 
-          <input
-            style={{ marginLeft: "10px" }}
-            type="file"
-            onChange={handleFileChange}
-          />
+          {(!isAdmin || (isAdmin && isFreeCourse)) && (
+            <input
+              style={{ marginLeft: "10px" }}
+              type="file"
+              onChange={handleFileChange}
+            />
+          )}
         </div>
 
         <div className="d-flex mt-4">
@@ -283,6 +282,7 @@ const CourseDetail = () => {
               backgroundColor: "green",
               borderColor: "green",
             }}
+            disabled={isAdmin && isPaidCourse}
           >
             Add New Lesson
           </Button>
@@ -294,7 +294,7 @@ const CourseDetail = () => {
               width: "200px",
               marginLeft: "10px",
             }}
-            disabled={lesson?.length > 0}
+            disabled={lesson?.length > 0 || (isAdmin && isPaidCourse)}
           >
             Delete Course
           </Button>

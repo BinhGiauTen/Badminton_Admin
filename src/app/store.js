@@ -8,6 +8,7 @@ import freeCourseReducer from "../features/freeCourse/freeCourseSlice";
 import paidCourseReducer from "../features/paidCourse/paidCourseSlice";
 import freeLessonReducer from "../features/freeLesson/freeLessonSlice";
 import paidLessonReducer from "../features/paidLesson/paidLessonSlice";
+import questionReducer from "../features/question/questionSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -19,5 +20,6 @@ export const store = configureStore({
     paidCourse: paidCourseReducer,
     freeLesson: freeLessonReducer,
     paidLesson: paidLessonReducer,
+    question: questionReducer,
   },
 });

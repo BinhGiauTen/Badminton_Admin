@@ -58,6 +58,7 @@ const AddFreeLesson = () => {
     const data = {
       freeCourseId: Number(courseId),
       content: content,
+      name: content?.blocks[0]?.data?.text
     };
 
     if (!isAddLesson) {

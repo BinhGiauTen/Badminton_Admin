@@ -58,6 +58,7 @@ const AddPaidLesson = () => {
     const data = {
       paidCourseId: Number(courseId),
       content: content,
+      name: content?.blocks[0]?.data?.text
     };
 
     if (!isAddLesson) {
