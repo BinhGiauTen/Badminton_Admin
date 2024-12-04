@@ -132,3 +132,7 @@
 .lesson-table {
   margin-top: 20px;
 }
+
+.ant-collapse-header{
+  align-items: center;
+}

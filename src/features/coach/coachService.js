@@ -20,10 +20,6 @@ const updateCoach = async (user) => {
     },
     config
   );
-  // if (response.data) {
-  //   localStorage.setItem("User", JSON.stringify(response.data));
-  // }
-  console.log("Response data:", response.data);
   return response.data;
 };
 
