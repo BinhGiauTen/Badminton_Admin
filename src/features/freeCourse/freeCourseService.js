@@ -1,25 +1,23 @@
-import axios from "axios";
-import { config } from "../../utils/axiosconfig";
+import axiosInstance from "../../utils/axiosInstance";
+
 
 const getAllFreeCourse = async () => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `free-courses`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `free-courses`
   );
   return response.data;
 };
 
 const createFreeCourse = async (freeCourse) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `free-courses`,
-    freeCourse,
-    config
+    freeCourse
   );
   return response.data;
 };
 
 const updateFreeCourse = async (freeCourse) => {
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `free-courses/${freeCourse.id}`,
     {
         name: freeCourse.freeCourseData.name,
@@ -27,8 +25,7 @@ const updateFreeCourse = async (freeCourse) => {
         thumbnail: freeCourse.freeCourseData.thumbnail,
         categoryId: freeCourse.freeCourseData.category,
         lessonQuantity: freeCourse.freeCourseData.lessonQuantity,
-    },
-    config
+    }
   );
   return response.data;
 };
@@ -36,34 +33,30 @@ const updateFreeCourse = async (freeCourse) => {
 const updateFreeCourseThumbnail = async (freeCourseId,file) => {
   const formData = new FormData();
   formData.append("image",file);
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `free-courses/thumbnail/${freeCourseId}`,
-    formData,
-    config
+    formData
   );
   return response.data;
 };
 
 const getAFreeCourse = async (freeCourseId) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`
   );
   return response.data;
 };
 
 const getFreeCourseByCategoryId = async (categoryId) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `free-courses/category/${categoryId}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `free-courses/category/${categoryId}`
   );
   return response.data;
 };
 
 const deleteFreeCourse = async (freeCourseId) => {
-  const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`,
-    config
+  const response = await axiosInstance.delete(
+    process.env.REACT_APP_BASE_URL + `free-courses/${freeCourseId}`
   );
   return response.data;
 };

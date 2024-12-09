@@ -1,8 +1,7 @@
-import axios from "axios";
-import { config } from "../../utils/axiosconfig";
+import axiosInstance from "../../utils/axiosInstance";
 
 const login = async (user) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `auth/login`,
     user
   );
@@ -10,7 +9,7 @@ const login = async (user) => {
 };
 
 const forgotPassword = async (data) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `auth/forgot-password`,
     data
   );
@@ -18,7 +17,7 @@ const forgotPassword = async (data) => {
 };
 
 const resetPassword = async (data) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `auth/reset-password`,
     data
   );
@@ -26,7 +25,7 @@ const resetPassword = async (data) => {
 };
 
 const verifyOTP = async (data) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `auth/verify-otp`,
     data
   );
@@ -34,9 +33,8 @@ const verifyOTP = async (data) => {
 };
 
 const logout = async () => {
-  const response = await axios.post(
-    process.env.REACT_APP_BASE_URL + `auth/logout`,
-    config
+  const response = await axiosInstance.post(
+    process.env.REACT_APP_BASE_URL + `auth/logout`
   );
   return response.data;
 };

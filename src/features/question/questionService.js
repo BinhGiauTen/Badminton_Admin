@@ -1,78 +1,70 @@
-import axios from "axios";
-import { config } from "../../utils/axiosconfig";
+import axiosInstance from "../../utils/axiosInstance";
+
 
 const createQuestionForFreeLesson = async (question) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `questions/free-lesson`,
-    question,
-    config
+    question
   );
   return response.data;
 };
 
 const createQuestionForPaidLesson = async (question) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `questions/paid-lesson`,
-    question,
-    config
+    question
   );
   return response.data;
 };
 
 const updateQuestionForFreeLesson = async (question) => {
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `questions/free-lesson/${question.id}`,
     {
       text: question.questionData.text,
       rightAnswer: question.questionData.rightAnswer,
       freeLessonId: question.questionData.freeLessonId,
-    },
-    config
+    }
   );
   return response.data;
 };
 
 const updateQuestionForPaidLesson = async (question) => {
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `questions/paid-lesson/${question.id}`,
     {
       text: question.questionData.text,
       rightAnswer: question.questionData.rightAnswer,
       paidLessonId: question.questionData.paidLessonId,
-    },
-    config
+    }
   );
   return response.data;
 };
 
 const getAllQuestionByFreeLessonId = async (lessonId) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `questions/free-lesson/${lessonId}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `questions/free-lesson/${lessonId}`
   );
   return response.data;
 };
 
 const getAllQuestionByPaidLessonId = async (lessonId) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `questions/paid-lesson/${lessonId}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `questions/paid-lesson/${lessonId}`
   );
   return response.data;
 };
 
 const getQuestionById = async (questionId) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `questions/${questionId}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `questions/${questionId}`
   );
   return response.data;
 };
 
 const deleteQuestion = async (questionId) => {
-  const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `questions/${questionId}`,
-    config
+  const response = await axiosInstance.delete(
+    process.env.REACT_APP_BASE_URL + `questions/${questionId}`
   );
   return response.data;
 };

@@ -1,8 +1,7 @@
-import axios from "axios";
-import { config } from "../../utils/axiosconfig";
+import axiosInstance from "../../utils/axiosInstance";
 
 const adminRegister = async (user) => {
-  const response = await axios.post(
+  const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `admin/register`,
     user
   );
@@ -10,47 +9,42 @@ const adminRegister = async (user) => {
 };
 
 const getAllUser = async () => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `admin/users`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `admin/users`
   );
   return response.data;
 };
 
 const deleteUser = async (id) => {
-  const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `admin/user/${id}`,
-    config
+  const response = await axiosInstance.delete(
+    process.env.REACT_APP_BASE_URL + `admin/user/${id}`
   );
   return response.data;
 };
 
 const getAllCoach = async () => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `admin/coaches`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `admin/coaches`
   );
   return response.data;
 };
 
 const deleteCoach = async (id) => {
-  const response = await axios.delete(
-    process.env.REACT_APP_BASE_URL + `admin/coach/${id}`,
-    config
+  const response = await axiosInstance.delete(
+    process.env.REACT_APP_BASE_URL + `admin/coach/${id}`
   );
   return response.data;
 };
 
 const getAdminById = async (id) => {
-  const response = await axios.get(
-    process.env.REACT_APP_BASE_URL + `admin/${id}`,
-    config
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `admin/${id}`
   );
   return response.data;
 };
 
 const updateAdmin = async (user) => {
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `admin/${user.id}`,
     {
       firstName: user.userData.firstName,
@@ -58,7 +52,6 @@ const updateAdmin = async (user) => {
       gender: user.userData.gender,
       dob: user.userData.dob,
     },
-    config
   );
   return response.data;
 };
@@ -66,10 +59,9 @@ const updateAdmin = async (user) => {
 const updateAdminAvatar = async (id, file) => {
   const formData = new FormData();
   formData.append("image", file);
-  const response = await axios.patch(
+  const response = await axiosInstance.patch(
     process.env.REACT_APP_BASE_URL + `admin/avatar/${id}`,
-    formData,
-    config
+    formData
   );
   return response.data;
 };
