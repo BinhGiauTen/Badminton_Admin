@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import CustomInput from "../../components/CustomInput";
 import { Input } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,9 +17,12 @@ import { getAllCategory } from "../../features/category/categorySlice";
 const freeSchema = yup.object().shape({
   name: yup.string().required("Course name is required"),
   description: yup.string().required("Description is required"),
-  categoryId: yup.number().required("Category is required"),
+  categoryId: yup
+    .number()
+    .typeError("Category is required")
+    .required("Category is required")
+    .min(1, "Category is required"),
 });
-
 
 const AddFreeCourse = () => {
   const dispatch = useDispatch();
@@ -47,7 +50,7 @@ const AddFreeCourse = () => {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      name: freeCourse?.name ||  "",
+      name: freeCourse?.name || "",
       description: freeCourse?.description || "",
       categoryId: freeCourse?.categoryId || 0,
     },
@@ -100,12 +103,10 @@ const AddFreeCourse = () => {
   return (
     <>
       <h3 className="mb-4 title">
-        {courseId !== undefined ? "Edit" : "Add"}{" "}
-        Free Course
+        {courseId !== undefined ? "Edit" : "Add"} Free Course
       </h3>
       <div className="">
         <form action="" onSubmit={formik.handleSubmit}>
-
           <CustomInput
             type="text"
             label="Course Name"
@@ -140,10 +141,14 @@ const AddFreeCourse = () => {
 
           <select
             name="categoryId"
-            onChange={formik.handleChange("categoryId")}
-            onBlur={formik.handleBlur("categoryId")}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.categoryId}
-            className="form-control py-3 mb-3"
+            className={`form-control py-3 mb-3 ${
+              formik.touched.categoryId && formik.errors.categoryId
+                ? "is-invalid"
+                : ""
+            }`}
             id="categoryId"
             disabled={courseId !== undefined}
           >
@@ -156,13 +161,17 @@ const AddFreeCourse = () => {
               );
             })}
           </select>
+          <div className="error">
+            {formik.touched.categoryId && formik.errors.categoryId ? (
+              <div>{formik.errors.categoryId}</div>
+            ) : null}
+          </div>
 
           <button
             className="btn btn-success border-0 rounded-3 my-3"
             type="submit"
           >
-            {courseId !== undefined ? "Edit" : "Add"}{" "}
-            Free Course
+            {courseId !== undefined ? "Edit" : "Add"} Free Course
           </button>
         </form>
       </div>

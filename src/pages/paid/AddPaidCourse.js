@@ -17,12 +17,19 @@ import {
 const paidSchema = yup.object().shape({
   name: yup.string().required("Course name is required"),
   description: yup.string().required("Description is required"),
-  categoryId: yup.number().required("Category is required"),
-  price: yup.string().required("Price is required"),
+  categoryId: yup
+    .number()
+    .typeError("Category is required")
+    .required("Category is required")
+    .min(1, "Category is required"),
+  price: yup
+    .number()
+    .required("Price is required")
+    .min(0, "Price must be greater than or equal to 0"),
   status: yup
     .string()
-    .oneOf(["publish", "non-publish"])
-    .required("Status is required"),
+    .required("Status is required")
+    .oneOf(["publish", "non-publish"], "Invalid status selected"),
 });
 
 const AddPaidCourse = () => {
@@ -43,8 +50,8 @@ const AddPaidCourse = () => {
   useEffect(() => {
     if (isPaidCourse && courseId) {
       dispatch(getAPaidCourse(courseId));
-    }else {
-        dispatch(resetState());
+    } else {
+      dispatch(resetState());
     }
   }, [dispatch, courseId, isPaidCourse]);
 
@@ -148,10 +155,14 @@ const AddPaidCourse = () => {
 
           <select
             name="categoryId"
-            onChange={formik.handleChange("categoryId")}
-            onBlur={formik.handleBlur("categoryId")}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
             value={formik.values.categoryId}
-            className="form-control py-3 mb-3"
+            className={`form-control py-3 mb-3 ${
+              formik.touched.categoryId && formik.errors.categoryId
+                ? "is-invalid"
+                : ""
+            }`}
             id="categoryId"
             disabled={courseId !== undefined}
           >
@@ -164,14 +175,24 @@ const AddPaidCourse = () => {
               );
             })}
           </select>
+          <div className="error">
+            {formik.touched.categoryId && formik.errors.categoryId ? (
+              <div>{formik.errors.categoryId}</div>
+            ) : null}
+          </div>
 
           <div>
             <CustomInput
-              type="text"
+              type="number"
               label="Price"
               name="price"
               id="price"
-              onCh={formik.handleChange("price")}
+              onCh={(e) => {
+                const value = e.target.value;
+                if (!isNaN(value) && Number(value) >= 0) {
+                  formik.handleChange("price")(e);
+                }
+              }}
               onBl={formik.handleBlur("price")}
               val={formik.values.price}
             />
@@ -192,20 +213,26 @@ const AddPaidCourse = () => {
             }}
             onBlur={formik.handleBlur("status")}
             value={formik.values.status}
-            className="form-control py-3 mb-3"
+            className={`form-control py-3 mb-3 ${
+              formik.touched.status && formik.errors.status ? "is-invalid" : ""
+            }`}
             id="status"
           >
             <option value="">Select Status</option>
             <option value="non-publish">non-publish</option>
             <option value="publish">publish</option>
           </select>
+          <div className="error">
+            {formik.touched.status && formik.errors.status ? (
+              <div>{formik.errors.status}</div>
+            ) : null}
+          </div>
 
           <button
             className="btn btn-success border-0 rounded-3 my-3"
             type="submit"
           >
-            {courseId !== undefined ? "Edit" : "Add"}{" "}
-            Paid Course
+            {courseId !== undefined ? "Edit" : "Add"} Paid Course
           </button>
         </form>
       </div>

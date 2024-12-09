@@ -68,6 +68,17 @@ export const uploadImageLesson = createAsyncThunk(
   }
 );
 
+export const uploadVideoLesson = createAsyncThunk(
+  "lesson/upload-video-lesson",
+  async (file, thunkAPI) => {
+    try {
+      return await freeLessonService.uploadVideoLesson(file);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
 export const resetState = createAction("Reset_all");
 
 export const freeLessonSlice = createSlice({
@@ -143,9 +154,24 @@ export const freeLessonSlice = createSlice({
         state.isLoading = false;
         state.isError = false;
         state.isSuccess = true;
-        state.uploaddImageLesson = action.payload;
+        state.uploadedImageLesson = action.payload;
       })
       .addCase(uploadImageLesson.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(uploadVideoLesson.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(uploadVideoLesson.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.uploadedVideoLesson = action.payload;
+      })
+      .addCase(uploadVideoLesson.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

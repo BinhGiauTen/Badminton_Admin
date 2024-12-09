@@ -70,6 +70,18 @@ export const deleteCoach = createAsyncThunk(
   }
 );
 
+export const getAdminById = createAsyncThunk(
+  "admin/get-admin-by-id",
+  async (id,thunkAPI) => {
+    try {
+      return await adminService.getAdminById(id);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const updateAdmin = createAsyncThunk(
   "admin/update-admin",
   async (user,thunkAPI) => {
@@ -179,6 +191,21 @@ export const adminSlice = createSlice({
       state.message = action.error;
     })
 
+    .addCase(getAdminById.pending, (state) => {
+      state.isLoading = true;
+    })
+    .addCase(getAdminById.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isError = false;
+      state.isSuccess = true;
+      state.admin = action.payload;
+    })
+    .addCase(getAdminById.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.isSuccess = false;
+      state.message = action.error;
+    })
     .addCase(updateAdmin.pending, (state) => {
       state.isLoading = true;
     })

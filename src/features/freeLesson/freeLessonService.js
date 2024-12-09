@@ -49,11 +49,23 @@ const uploadImageLesson = async (file) => {
   return response.data;
 };
 
+const uploadVideoLesson = async (file) => {
+  const formData = new FormData();
+  formData.append("video", file);
+  const response = await axios.patch(
+    process.env.REACT_APP_BASE_URL + `lessons/free/video`,
+    formData,
+    config
+  );
+  return response.data;
+};
+
 const freeLessonService = {
   createFreeLesson,
   updateFreeLesson,
   getAFreeLesson,
   deleteFreeLesson,
-  uploadImageLesson
+  uploadImageLesson,
+  uploadVideoLesson
 };
 export default freeLessonService;

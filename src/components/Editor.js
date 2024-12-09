@@ -13,8 +13,12 @@ import Marker from "@editorjs/marker";
 import InlineCode from "@editorjs/inline-code";
 import AlignmentBlockTune from "editorjs-text-alignment-blocktune";
 import ImageTool from "@editorjs/image";
+import VideoTool from "@weekwood/editorjs-video";
 import { useDispatch } from "react-redux";
-import { uploadImageLesson } from "../features/freeLesson/freeLessonSlice";
+import {
+  uploadImageLesson,
+  uploadVideoLesson,
+} from "../features/freeLesson/freeLessonSlice";
 
 const Editor = ({ data, onChange, editorBlock }) => {
   const dispatch = useDispatch();
@@ -63,20 +67,18 @@ const Editor = ({ data, onChange, editorBlock }) => {
             config: {
               uploader: {
                 uploadByFile(file) {
-                  return dispatch(uploadImageLesson(file)).then(
-                    (response) => {
-                      if (response) {
-                        return {
-                          success: 1,
-                          file: {
-                            url: response.payload.data,
-                          },
-                        };
-                      } else {
-                        return { success: 0 };
-                      }
+                  return dispatch(uploadImageLesson(file)).then((response) => {
+                    if (response) {
+                      return {
+                        success: 1,
+                        file: {
+                          url: response.payload.data,
+                        },
+                      };
+                    } else {
+                      return { success: 0 };
                     }
-                  );
+                  });
                 },
               },
             },
@@ -87,6 +89,31 @@ const Editor = ({ data, onChange, editorBlock }) => {
               services: {
                 youtube: true,
                 codepen: true,
+              },
+            },
+          },
+          video: {
+            class: VideoTool,
+            config: {
+              uploader: {
+                uploadByFile(file) {
+                  return dispatch(uploadVideoLesson(file)).then((response) => {
+                    if (response) {
+                      return {
+                        success: 1,
+                        file: {
+                          url: response.payload.data,
+                        },
+                      };
+                    } else {
+                      return { success: 0 };
+                    }
+                  });
+                },
+              },
+              player: {
+                autoplay: true,
+                controls: true,
               },
             },
           },
@@ -108,7 +135,7 @@ const Editor = ({ data, onChange, editorBlock }) => {
         },
         async onChange(api, event) {
           const savedData = await api.saver.save();
-          onChange(savedData); 
+          onChange(savedData);
         },
       });
       ref.current = editor;
