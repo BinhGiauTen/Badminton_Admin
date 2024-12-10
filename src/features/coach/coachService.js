@@ -11,14 +11,19 @@ const coachRegister = async (user) => {
 
 const updateCoach = async (user) => {
   const response = await axiosInstance.patch(
-    process.env.REACT_APP_BASE_URL + `coach/${user.id}`,
+    process.env.REACT_APP_BASE_URL + `coaches/${user.id}`,
     {
-      first_name: user.userData.first_name,
-      last_name: user.userData.last_name,
+      firstName: user.userData.firstName,
+      lastName: user.userData.lastName,
       gender: user.userData.gender,
       dob: user.userData.dob,
+      email: user.userData.email,
+      description: user.userData.description
     }
   );
+  if(response.data.data){
+    localStorage.setItem("user", JSON.stringify(response.data.data));
+  }
   return response.data;
 };
 
@@ -26,9 +31,12 @@ const updateCoachAvatar = async (id, file) => {
   const formData = new FormData();
   formData.append("image", file);
   const response = await axiosInstance.patch(
-    process.env.REACT_APP_BASE_URL + `coach/avatar/${id}`,
+    process.env.REACT_APP_BASE_URL + `coaches/avatar/${id}`,
     formData
   );
+  if(response.data.data){
+    localStorage.setItem("user", JSON.stringify(response.data.data));
+  }
   return response.data;
 };
 

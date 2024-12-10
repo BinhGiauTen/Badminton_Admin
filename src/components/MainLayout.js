@@ -7,7 +7,7 @@ import {
 } from "react-icons/ai";
 import { MdCircleNotifications } from "react-icons/md";
 import { Outlet } from "react-router-dom";
-import { FaClipboardList, FaBloggerB } from "react-icons/fa";
+import { FaClipboardList, FaBloggerB, FaCcMastercard } from "react-icons/fa";
 import { FaAtlas } from "react-icons/fa";
 import { ImBlog } from "react-icons/im";
 import { Layout, Menu, Button, theme } from "antd";
@@ -168,6 +168,11 @@ const MainLayout = () => {
                   },
                 ],
               },
+              {
+                key: "orders",
+                icon: <FaCcMastercard className="fs-4" />,
+                label: "Orders",
+              },
             ]}
           />
         </Sider>
@@ -257,7 +262,6 @@ const MainLayout = () => {
       <ProfileModal
         open={isModalVisible}
         onClose={handleCloseModal}
-        user={userState}
       />
     </>
   );

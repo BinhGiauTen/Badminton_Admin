@@ -51,8 +51,12 @@ const updateAdmin = async (user) => {
       lastName: user.userData.lastName,
       gender: user.userData.gender,
       dob: user.userData.dob,
+      email: user.userData.email
     },
   );
+  if(response.data.data){
+    localStorage.setItem("user", JSON.stringify(response.data.data));
+  }
   return response.data;
 };
 
@@ -63,6 +67,9 @@ const updateAdminAvatar = async (id, file) => {
     process.env.REACT_APP_BASE_URL + `admin/avatar/${id}`,
     formData
   );
+  if(response.data.data){
+    localStorage.setItem("user", JSON.stringify(response.data.data));
+  }
   return response.data;
 };
 

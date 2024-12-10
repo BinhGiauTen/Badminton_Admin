@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Input, Button, Form, Radio } from "antd";
 import { updateAdmin, updateAdminAvatar } from "../features/admin/adminSlice";
+import { updateCoach, updateCoachAvatar } from "../features/coach/coachSlice";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { loadUserFromSecureStore } from "../features/user/userSlice";
 
-const ProfileModal = ({ open, onClose, user }) => {
+const ProfileModal = ({ open, onClose }) => {
+  const userState = useSelector((state) => state?.user?.user);
+  console.log("User in modal profile:", userState);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
-    firstName: user?.firstName || "",
-    lastName: user?.lastName || "",
-    gender: user?.gender || "",
-    dob: user?.dob || "",
-    description: user?.description || "",
-    avatar: user?.avatar || ""
+    firstName: userState?.firstName || "",
+    lastName: userState?.lastName || "",
+    gender: userState?.gender || "",
+    dob: userState?.dob || "",
+    description: userState?.description || "",
+    avatar: userState?.avatar || "",
   });
 
   useEffect(() => {
-    if (user) {
+    if (userState) {
       setFormData({
-        firstName: user.firstName || "",
-        lastName: user.lastName || "",
-        gender: user.gender || "",
-        dob: user.dob || "",
-        description: user.description || "",
-        avatar: user.avatar || ""
+        firstName: userState.firstName || "",
+        lastName: userState.lastName || "",
+        gender: userState.gender || "",
+        dob: userState.dob || "",
+        description: userState.description || "",
+        avatar: userState.avatar || "",
       });
     }
-  }, [user]);
+  }, [userState]);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -37,27 +41,86 @@ const ProfileModal = ({ open, onClose, user }) => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    const payload = {
-      id: user.id,
-      file: selectedFile,
-    };
-    dispatch(updateAdminAvatar(payload))
-      .unwrap()
-      .then(() => {
-        toast.success("Updated avatar successfully.");
-      })
-      .catch((error) => {
-        if (error === "Request failed with status code 404") {
-          toast.error("Update avatar fail. Please try again.");
-        } else if (error === "Network Error") {
-          toast.error("There was a server problem. Please try later.");
-        } else {
-          toast.error("An unknown error occurred.");
-        }
-      });
+    if (selectedFile && userState?.role === "admin") {
+      const payload = {
+        id: userState.id,
+        file: selectedFile,
+      };
+      dispatch(updateAdminAvatar(payload))
+        .unwrap()
+        .then(() => {
+          toast.success("Updated avatar successfully.");
+          dispatch(loadUserFromSecureStore());
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error("Update avatar fail. Please try again.");
+          } else if (error === "Network Error") {
+            toast.error("There was a server problem. Please try later.");
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+    } else {
+      const payload = {
+        id: userState.id,
+        file: selectedFile,
+      };
+      dispatch(updateCoachAvatar(payload))
+        .unwrap()
+        .then(() => {
+          toast.success("Updated avatar successfully.");
+          dispatch(loadUserFromSecureStore());
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error("Update avatar fail. Please try again.");
+          } else if (error === "Network Error") {
+            toast.error("There was a server problem. Please try later.");
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+    }
   };
   const handleSubmit = () => {
-    console.log("Data:", formData);
+    const userData = {
+      ...formData,
+      email: userState?.email,
+    };
+    if (userState?.role === "admin") {
+      dispatch(updateAdmin({ id: userState?.id, userData: userData }))
+        .unwrap()
+        .then(() => {
+          toast.success("Updated user successfully.");
+          dispatch(loadUserFromSecureStore());
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error("Update user fail. Please try again.");
+          } else if (error === "Network Error") {
+            toast.error("There was a server problem. Please try later.");
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+    } else {
+      dispatch(updateCoach({ id: userState?.id, userData: userData }))
+        .unwrap()
+        .then(() => {
+          toast.success("Updated user successfully.");
+          dispatch(loadUserFromSecureStore());
+        })
+        .catch((error) => {
+          if (error === "Request failed with status code 404") {
+            toast.error("Update user fail. Please try again.");
+          } else if (error === "Network Error") {
+            toast.error("There was a server problem. Please try later.");
+          } else {
+            toast.error("An unknown error occurred.");
+          }
+        });
+    }
   };
 
   return (
@@ -113,13 +176,17 @@ const ProfileModal = ({ open, onClose, user }) => {
             onChange={handleInputChange}
           />
         </Form.Item>
-        <Form.Item label="Description">
-          <Input.TextArea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-          />
-        </Form.Item>
+        {userState?.role === "coach" && (
+          <Form.Item label="Description">
+            <Input.TextArea
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              autoSize={{ minRows: 4, maxRows: 4 }}
+            />
+          </Form.Item>
+        )}
+        <br />
         <Form.Item>
           <Button type="primary" htmlType="submit" block>
             Update Profile

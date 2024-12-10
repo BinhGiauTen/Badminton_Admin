@@ -5,6 +5,7 @@ import { AiFillDelete } from "react-icons/ai";
 import CustomModal from "../components/CustomModal";
 import { deleteCoach, getAllCoach } from "../features/admin/adminSlice";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 
 const Coaches = () => {
   const [open, setOpen] = useState(false);
@@ -37,10 +38,10 @@ const Coaches = () => {
       title: "Date of birth",
       dataIndex: "dob",
     },
-    // {
-    //   title: "Gender",
-    //   dataIndex: "gender",
-    // },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -61,7 +62,7 @@ const Coaches = () => {
       dob: coachState[i].dob
         ? format(new Date(coachState[i].dob), "dd/MM/yyyy")
         : format(new Date(coachState[i].created_at), "dd/MM/yyyy"),
-      // gender: coachState[i].gender ,
+      gender: coachState[i].gender,
       action: (
         <>
           <button
@@ -74,12 +75,23 @@ const Coaches = () => {
       ),
     });
   }
-  const delCoach = (id) => {
-    dispatch(deleteCoach(id));
-    setOpen(false);
-    setTimeout(() => {
-      dispatch(getAllCoach());
-    }, 100);
+  const handleDeleteCoach = (id) => {
+    dispatch(deleteCoach(id))
+      .unwrap()
+      .then(() => {
+        toast.success("Delete user successfully.");
+        dispatch(getAllCoach());
+      })
+      .catch((error) => {
+        if (error === "Request failed with status code 500") {
+          toast.error("Coach deletion failed. Coach has an paid course.");
+          setOpen(false);
+        } else if (error === "Network Error") {
+          toast.error("There was a server problem. Please try later.");
+        } else {
+          toast.error("An unknown error occurred.");
+        }
+      });
   };
   return (
     <>
@@ -91,7 +103,7 @@ const Coaches = () => {
         hideModal={hideModal}
         open={open}
         performAction={() => {
-          delCoach(coachId);
+          handleDeleteCoach(coachId);
         }}
         title="Are you sure you want to delete this coach"
       />

@@ -26,6 +26,7 @@ import FreeLesson from "./pages/free/FreeLesson";
 import PaidLesson from "./pages/paid/PaidLesson";
 import AddFreeQuestion from "./pages/free/AddFreeQuestion";
 import AddPaidQuestion from "./pages/paid/AddPaidQuestion";
+import Orders from "./pages/Orders";
 
 function App() {
   const { token, user } = useContext(AuthContext);
@@ -38,6 +39,7 @@ function App() {
             <Route path="/dashboard" element={<MainLayout />}>
               <Route index element={<Dashboard />} />
               <Route path="coaches" element={<Coaches />} />
+              <Route path="orders" element={<Orders />} />
               <Route path="users" element={<Users />} />
               <Route path="free-courses" element={<FreeCourses />} />
               <Route path="paid-courses" element={<PaidCourses />} />

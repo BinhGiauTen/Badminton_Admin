@@ -10,6 +10,7 @@ import freeLessonReducer from "../features/freeLesson/freeLessonSlice";
 import paidLessonReducer from "../features/paidLesson/paidLessonSlice";
 import questionReducer from "../features/question/questionSlice";
 import answerReducer from "../features/answer/answerSlice";
+import orderReducer from "../features/order/orderSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -22,6 +23,7 @@ export const store = configureStore({
     freeLesson: freeLessonReducer,
     paidLesson: paidLessonReducer,
     question: questionReducer,
-    answer: answerReducer
+    answer: answerReducer,
+    order: orderReducer
   },
 });

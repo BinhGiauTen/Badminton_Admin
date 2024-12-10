@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiFillDelete } from "react-icons/ai";
 import CustomModal from "../components/CustomModal";
 import { deleteUser, getAllUser, resetState } from "../features/admin/adminSlice";
+import { toast } from "react-toastify";
 
 const Users = () => {
   const [open, setOpen] = useState(false);
@@ -36,10 +37,10 @@ const Users = () => {
       title: "Date of birth",
       dataIndex: "dob",
     },
-    // {
-    //   title: "Gender",
-    //   dataIndex: "gender",
-    // },
+    {
+      title: "Gender",
+      dataIndex: "gender",
+    },
     {
       title: "Action",
       dataIndex: "action",
@@ -47,7 +48,6 @@ const Users = () => {
   ];
   const dispatch = useDispatch();
   useEffect(() => {
-    // dispatch(resetState());
     dispatch(getAllUser());
   }, [dispatch]);
   const userState = useSelector((state) => state?.admin?.users);
@@ -59,7 +59,7 @@ const Users = () => {
       last_name: userState[i]?.lastName,
       email: userState[i]?.email,
       dob: userState[i]?.dob,
-      // gender: userState[i]?.gender,
+      gender: userState[i]?.gender,
       action: (
         <>
           <button
@@ -72,12 +72,23 @@ const Users = () => {
       ),
     });
   }
-  const delUser = (id) => {
-    dispatch(deleteUser(id));
-    setOpen(false);
-    setTimeout(() => {
+  const handleDeleteUser = (id) => {
+    dispatch(deleteUser(id))
+    .unwrap()
+    .then(() => {
+      toast.success("Delete user successfully.");
       dispatch(getAllUser());
-    }, 100);
+    })
+    .catch((error) => {
+      if (error === "Request failed with status code 500") {
+        toast.error("User deletion failed. User has an order.");
+        setOpen(false);
+      } else if (error === "Network Error") {
+        toast.error("There was a server problem. Please try later.");
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+    });
   };
   return (
     <>
@@ -89,7 +100,7 @@ const Users = () => {
         hideModal={hideModal}
         open={open}
         performAction={() => {
-          delUser(userId);
+          handleDeleteUser(userId);
         }}
         title="Are you sure you want to delete this user"
       />

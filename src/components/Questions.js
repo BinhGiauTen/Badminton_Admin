@@ -49,7 +49,6 @@ const Questions = () => {
   const navigate = useNavigate();
   const questions = useSelector((state) => state?.question?.questions);
 
-
   useEffect(() => {
     dispatch(getAllQuestionByFreeLessonId(lessonId));
     dispatch(getAFreeLesson(lessonId));
@@ -77,7 +76,6 @@ const Questions = () => {
       .finally(() => {
         setIsGeneratingQuiz(false);
       });
-
   };
 
   const handleDeleteQuestion = (id) => {
@@ -117,6 +115,7 @@ const Questions = () => {
     dispatch(deleteAnswer(answerId))
       .unwrap()
       .then(() => {
+        dispatch(getAllQuestionByFreeLessonId(lessonId));
         fetchAnswersByQuestionId(questionId);
         setOpenDeleteAnswerModal(false);
       })
@@ -140,6 +139,7 @@ const Questions = () => {
       .then(() => {
         toast.success("Answer added successfully!");
         setNewAnswer("");
+        dispatch(getAllQuestionByFreeLessonId(lessonId));
         fetchAnswersByQuestionId(questionId);
       })
       .catch((error) => {
@@ -191,8 +191,8 @@ const Questions = () => {
           accordion
           onChange={(key) => {
             if (key && key.length > 0) {
-              const selectedQuestionId = key[0]; 
-              fetchAnswersByQuestionId(selectedQuestionId); 
+              const selectedQuestionId = key[0];
+              fetchAnswersByQuestionId(selectedQuestionId);
             } else {
               setSelectedQuestionId(null);
               setAnswers([]);
@@ -204,7 +204,9 @@ const Questions = () => {
           ) : (
             questions.map((question, index) => (
               <Panel
-                header={`${index + 1}. ${question?.text} ${question?.rightAnswer}`}
+                header={`${index + 1}. ${question?.text} ${
+                  question?.rightAnswer
+                }`}
                 key={question?.id}
                 extra={
                   <div>
@@ -214,15 +216,17 @@ const Questions = () => {
                     >
                       <BiEdit />
                     </Link>
-                    <Button
-                      className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
-                      type="link"
-                      icon={<AiFillDelete />}
-                      onClick={() => {
-                        setQuestionId(question?.id);
-                        showDeleteQuestionModal();
-                      }}
-                    />
+                    {(question?.answer?.length === 0) && (
+                      <Button
+                        className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
+                        type="link"
+                        icon={<AiFillDelete />}
+                        onClick={() => {
+                          setQuestionId(question?.id);
+                          showDeleteQuestionModal();
+                        }}
+                      />
+                    )}
                   </div>
                 }
               >
