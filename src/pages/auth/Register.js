@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import CustomInput from "../../components/CustomInput";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -7,13 +7,12 @@ import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import { passwordRegex, usernameRegex } from "../../constant/Regex";
 import { ColorAccent } from "../../constant/Color";
-import { adminRegister } from "../../features/admin/adminSlice";
 import { coachRegister } from "../../features/coach/coachSlice";
 
 const Register = () => {
-  const [role, setRole] = useState("admin");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const schema = Yup.object().shape({
     firstName: Yup.string()
       .matches(usernameRegex, "First name can only include letters")
@@ -32,6 +31,7 @@ const Register = () => {
       .max(24, "Password cannot exceed 24 characters")
       .required("Password is required"),
   });
+
   const formik = useFormik({
     initialValues: {
       firstName: "",
@@ -41,31 +41,9 @@ const Register = () => {
     },
     validationSchema: schema,
     onSubmit: (values) => {
-      const registerData = {
-        ...values,
-        role: role,
-      };
-      console.log("Register Data:", registerData);
-      if(role === "admin"){
-        dispatch(adminRegister(registerData))
-        .unwrap()
-        .then(() => {
-          toast.success("Admin created successfully");
-          navigate("/login");
-        })
-        .catch((error) => {
-          if (error === "Request failed with status code 400") {
-            toast.error("Admin with this email have already exist");
-          } else if (error === "Network Error") {
-            toast.error(
-              "There was a problem with the server. Please try again later."
-            );
-          } else {
-            toast.error("An unknown error occurred.");
-          }
-        });
-      }else {
-        dispatch(coachRegister(registerData))
+      const registerData = { ...values, role: "coach" };
+
+      dispatch(coachRegister(registerData))
         .unwrap()
         .then(() => {
           toast.success("Coach created successfully");
@@ -73,7 +51,7 @@ const Register = () => {
         })
         .catch((error) => {
           if (error === "Request failed with status code 400") {
-            toast.error("Coach with this email have already exist");
+            toast.error("Coach with this email already exists");
           } else if (error === "Network Error") {
             toast.error(
               "There was a problem with the server. Please try again later."
@@ -82,13 +60,8 @@ const Register = () => {
             toast.error("An unknown error occurred.");
           }
         });
-      }
     },
   });
-
-  const toggleRole = () => {
-    setRole((prevRole) => (prevRole === "admin" ? "coach" : "admin"));
-  };
 
   return (
     <>
@@ -107,9 +80,7 @@ const Register = () => {
         <br />
         <br />
         <div className="w-25 bg-white rounded-3 mx-auto p-4">
-          <h3 className="text-center title">
-            {role === "admin" ? "Admin Register" : "Coach Register"}
-          </h3>
+          <h3 className="text-center title">Coach Register</h3>
           <p className="text-center">Login to your account to continue.</p>
           <form action="" onSubmit={formik.handleSubmit}>
             <CustomInput
@@ -161,16 +132,8 @@ const Register = () => {
                 <div>{formik.errors.password}</div>
               ) : null}
             </div>
+
             <div className="d-flex my-2 align-items-center justify-content-between">
-              <div className="as-coach">
-                <div
-                  style={{ color: ColorAccent.primary }}
-                  className="text-decoration-underline"
-                  onClick={toggleRole}
-                >
-                  Register as {role === "admin" ? "coach" : "admin"}
-                </div>
-              </div>
               <div>
                 <Link to="/login">Login</Link>
               </div>
@@ -181,12 +144,9 @@ const Register = () => {
               style={{ background: ColorAccent.primary }}
               type="submit"
             >
-              {role === "admin" ? "Admin Register" : "Coach Register"}
+              Register
             </button>
-            <br/>
-            <div className="text-center">
-              <Link to="/forgot-password">Forgot Password</Link>
-            </div>
+            <br />
           </form>
         </div>
       </div>

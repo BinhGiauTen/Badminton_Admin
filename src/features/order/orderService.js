@@ -7,6 +7,12 @@ const getAllOrders = async () => {
   );
   return response.data;
 };
+const getAllOrdersForCoach = async (id) => {
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `order/${id}`
+  );
+  return response.data;
+};
 
 const getRevenueByMonth = async () => {
   const response = await axiosInstance.get(
@@ -14,9 +20,17 @@ const getRevenueByMonth = async () => {
   );
   return response.data;
 };
+const getRevenueByMonthForCoach = async (id) => {
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `order/revenue/coach/${id}`
+  );
+  return response.data;
+};
 
 const orderService = {
   getAllOrders,
-  getRevenueByMonth
+  getAllOrdersForCoach,
+  getRevenueByMonth,
+  getRevenueByMonthForCoach
 };
 export default orderService;

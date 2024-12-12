@@ -31,6 +31,7 @@ const MainLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const [rerender, setRerender] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -66,7 +67,8 @@ const MainLayout = () => {
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
-  }, [dispatch]);
+    setRerender((prev) => prev + 1);
+  }, [dispatch, setRerender]);
 
   return (
     <>

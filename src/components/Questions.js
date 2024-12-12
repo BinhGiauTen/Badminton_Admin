@@ -216,17 +216,16 @@ const Questions = () => {
                     >
                       <BiEdit />
                     </Link>
-                    {(question?.answer?.length === 0) && (
-                      <Button
-                        className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
-                        type="link"
-                        icon={<AiFillDelete />}
-                        onClick={() => {
-                          setQuestionId(question?.id);
-                          showDeleteQuestionModal();
-                        }}
-                      />
-                    )}
+
+                    <Button
+                      className="ms-2 fs-3 text-danger bg-transparent border-0 px-0"
+                      type="link"
+                      icon={<AiFillDelete />}
+                      onClick={() => {
+                        setQuestionId(question?.id);
+                        showDeleteQuestionModal();
+                      }}
+                    />
                   </div>
                 }
               >
