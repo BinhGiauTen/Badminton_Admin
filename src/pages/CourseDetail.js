@@ -53,7 +53,6 @@ const CourseDetail = () => {
       ? state?.freeCourse?.freeCourse?.freeLesson
       : state?.paidCourse?.paidCourse?.paidLesson
   );
-  console.log("Lesson:", lesson);
   const userCourses = useSelector(
     (state) => state?.paidCourse?.paidCourse?.user_course || []
   );

@@ -40,7 +40,6 @@ export const deleteUser = createAsyncThunk(
     try {
       return await adminService.deleteUser(id);
     } catch (error) {
-      console.log("Error:", error);
       const message = error.message || "Network Error";
       return thunkAPI.rejectWithValue(message);
     }

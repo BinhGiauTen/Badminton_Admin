@@ -8,7 +8,6 @@ import { loadUserFromSecureStore } from "../features/user/userSlice";
 
 const ProfileModal = ({ open, onClose }) => {
   const userState = useSelector((state) => state?.user?.user);
-  console.log("User in modal profile:", userState);
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({
     firstName: userState?.firstName || "",

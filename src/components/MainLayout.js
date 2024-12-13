@@ -14,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import AuthContext from "../context/AuthContext";
 import { loadUserFromSecureStore } from "../features/user/userSlice";
 import ProfileModal from "./ProfileModal";
@@ -30,7 +30,6 @@ const MainLayout = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [rerender, setRerender] = useState(0);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -62,12 +61,10 @@ const MainLayout = () => {
   };
 
   const userState = useSelector((state) => state?.user?.user);
-  console.log("user state:", userState);
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
-    setRerender((prev) => prev + 1);
-  }, [dispatch, setRerender]);
+  }, [dispatch]);
 
   return (
     <>
@@ -257,18 +254,6 @@ const MainLayout = () => {
       <ProfileModal
         open={isModalVisible}
         onClose={handleCloseModal}
-      />
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
       />
     </>
   );

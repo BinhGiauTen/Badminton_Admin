@@ -22,15 +22,14 @@ const AddCategory = () => {
   const navigate = useNavigate();
   const getCategoryId = location.pathname.split("/")[3];
   const category = useSelector((state) => state.category.category);
-  console.log("Category:", category);
-  //   const { isSuccess, isError, isLoading, createdBCategory, bcategoryName, updatedBCategory } = category;
+
   useEffect(() => {
     if (getCategoryId !== undefined) {
       dispatch(getACategory(getCategoryId));
     } else {
       dispatch(resetState());
     }
-  }, [getCategoryId]);
+  }, [getCategoryId, dispatch]);
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {

@@ -111,7 +111,6 @@ const Questions = () => {
   };
 
   const handleDeleteAnswer = (answerId, questionId) => {
-    console.log("QuestionId:", questionId);
     dispatch(deleteAnswer(answerId))
       .unwrap()
       .then(() => {

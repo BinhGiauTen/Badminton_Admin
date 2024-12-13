@@ -26,7 +26,6 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.user?.user);
   const [rerender, setRerender] = useState(0);
-  console.log("Rerender")
   useEffect(() => {
     if (userState?.role === "admin") {
       dispatch(getAllUser());
@@ -40,7 +39,7 @@ const Dashboard = () => {
       dispatch(getRevenueByMonthForCoach(userState?.id));
       setRerender((prev) => prev + 1);
     }
-  }, [dispatch, userState?.role, setRerender]);
+  }, [dispatch, userState, setRerender]);
 
   const quantityUser = useSelector((state) => state?.admin?.users?.length) || 0;
   const quantityCoach =

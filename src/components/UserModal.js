@@ -2,7 +2,6 @@ import React from "react";
 import { Modal, Avatar, List } from "antd";
 
 const UserModal = ({ open, onClose, users }) => {
-  console.log("Users:", users);
   const defaultAvatar = "/images/default.png";
   return (
     <Modal

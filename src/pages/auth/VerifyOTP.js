@@ -38,7 +38,6 @@ const VerifyOTP = () => {
       };
       dispatch(verifyOTP(data)).unwrap()
       .then((userState) => {
-        console.log("User state in otp:", userState);
         storeAuthData(userState?.data?.user, userState?.data?.token);
         toast.success("You have been login successfully.")
         navigate("/dashboard");
