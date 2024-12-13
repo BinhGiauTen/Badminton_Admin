@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllCoach, getAllUser } from "../features/admin/adminSlice";
 import { getAllFreeCourse } from "../features/freeCourse/freeCourseSlice";
@@ -10,6 +10,7 @@ import {
   getRevenueByMonth,
   getRevenueByMonthForCoach,
 } from "../features/order/orderSlice";
+import { loadUserFromSecureStore } from "../features/user/userSlice";
 
 import {
   BarChart,
@@ -20,44 +21,43 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { loadUserFromSecureStore } from "../features/user/userSlice";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.user?.user);
-  const [rerender, setRerender] = useState(0);
+
+  // Lấy dữ liệu tổng quan từ store
+  const quantityUser = useSelector((state) => state?.admin?.users?.length) || 0;
+  const quantityCoach =
+    useSelector((state) => state?.admin?.coaches?.length) || 0;
+  const quantityFreeCourse =
+    useSelector((state) => state?.freeCourse?.freeCourses?.data?.length) || 0;
+  const quantityPaidCourse = useSelector(
+    (state) =>
+      state?.paidCourse?.paidCourses?.data?.length ||
+      state?.paidCourse?.paidCourses?.length ||
+      0
+  );
+
+  const revenueData = useSelector((state) => state?.order?.revenue?.data) || [];
+
   useEffect(() => {
+    // Nếu là admin
     if (userState?.role === "admin") {
       dispatch(getAllUser());
       dispatch(getAllCoach());
       dispatch(getAllFreeCourse());
       dispatch(getAllPaidCourse());
       dispatch(getRevenueByMonth());
-      setRerender((prev) => prev + 1);
-    } else if (userState?.role === "coach") {
+    }
+    // Nếu là coach
+    else if (userState?.role === "coach") {
       dispatch(getPaidCourseByCoachId(userState?.id));
       dispatch(getRevenueByMonthForCoach(userState?.id));
-      setRerender((prev) => prev + 1);
     }
-  }, [dispatch, userState, setRerender]);
-
-  const quantityUser = useSelector((state) => state?.admin?.users?.length) || 0;
-  const quantityCoach =
-    useSelector((state) => state?.admin?.coaches?.length) || 0;
-  const quantityFreeCourse =
-    useSelector((state) => state?.freeCourse?.freeCourses?.data?.length) || 0;
-  const quantityPaidCourse =
-    useSelector(
-      (state) =>
-        state?.paidCourse?.paidCourses?.data?.length ||
-        state?.paidCourse?.paidCourses?.length
-    ) || 0;
-
-  const revenueData = useSelector((state) => state?.order?.revenue?.data) || [];
-
-  useEffect(() => {
+    // Tải thông tin người dùng từ Secure Store
     dispatch(loadUserFromSecureStore());
-  }, [dispatch,rerender]);
+  }, [dispatch, userState?.role, userState?.id]);
 
   return (
     <>
@@ -86,6 +86,7 @@ const Dashboard = () => {
           <p>{quantityPaidCourse}</p>
         </div>
       </div>
+
       <div>
         <br />
         <h4>Revenue Statistics</h4>
