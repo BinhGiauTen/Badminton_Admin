@@ -25,12 +25,14 @@ import {
   deletePaidLesson,
   getAPaidLesson,
 } from "../features/paidLesson/paidLessonSlice";
+import UserModal from "../components/UserModal";
 
 const { Title, Text } = Typography;
 
 const CourseDetail = () => {
   const [openDeleteCourseModal, setOpenDeleteCourseModal] = useState(false);
   const [openDeleteLessonModal, setOpenDeleteLessonModal] = useState(false);
+  const [openUserModal, setOpenUserModal] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
   const [paidLessonId, setPaidLessonId] = useState("");
   const dispatch = useDispatch();
@@ -52,6 +54,16 @@ const CourseDetail = () => {
       : state?.paidCourse?.paidCourse?.paidLesson
   );
   console.log("Lesson:", lesson);
+  const userCourses = useSelector(
+    (state) => state?.paidCourse?.paidCourse?.user_course || []
+  );
+
+  const users = userCourses.map((userCourse) => ({
+    id: userCourse?.user?.id,
+    firstName: userCourse?.user?.firstName,
+    lastName: userCourse?.user?.lastName,
+    avatar: userCourse?.user?.avatar,
+  }));
 
   useEffect(() => {
     if (isFreeCourse && courseId) {
@@ -130,6 +142,14 @@ const CourseDetail = () => {
     setOpenDeleteLessonModal(false);
   };
 
+  const showUserModal = () => {
+    setOpenUserModal(true);
+  };
+
+  const hideUserModal = () => {
+    setOpenUserModal(false);
+  };
+
   const handleDeleteLesson = () => {
     if (isFreeCourse) {
       dispatch(deleteFreeLesson(freeLessonId)).then(() => {
@@ -170,13 +190,17 @@ const CourseDetail = () => {
       dispatch(getAFreeLesson(lessonId))
         .unwrap()
         .then(() =>
-          navigate(`/dashboard/free-course/${courseId}/preview-lesson/${lessonId}`)
+          navigate(
+            `/dashboard/free-course/${courseId}/preview-lesson/${lessonId}`
+          )
         );
     } else {
       dispatch(getAPaidLesson(lessonId))
         .unwrap()
         .then(() =>
-          navigate(`/dashboard/paid-course/${courseId}/preview-lesson/${lessonId}`)
+          navigate(
+            `/dashboard/paid-course/${courseId}/preview-lesson/${lessonId}`
+          )
         );
     }
   };
@@ -294,10 +318,27 @@ const CourseDetail = () => {
               width: "200px",
               marginLeft: "10px",
             }}
-            disabled={lesson?.length > 0 || (isAdmin && isPaidCourse)}
+            disabled={
+              (lesson?.length > 0 && course?.studentQuantity > 0 && !isAdmin) ||
+              (isAdmin && isPaidCourse) ||
+              (lesson?.length > 0 && isAdmin)
+            }
           >
             Delete Course
           </Button>
+          {!isAdmin && (
+            <Button
+              type="primary"
+              onClick={showUserModal}
+              block
+              style={{
+                width: "200px",
+                marginLeft: "10px",
+              }}
+            >
+              View Users
+            </Button>
+          )}
         </div>
       </Card>
 
@@ -322,6 +363,7 @@ const CourseDetail = () => {
         performAction={handleDeleteLesson}
         title="Are you sure you want to delete this lesson?"
       />
+      <UserModal open={openUserModal} onClose={hideUserModal} users={users} />
     </div>
   );
 };

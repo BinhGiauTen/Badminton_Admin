@@ -136,9 +136,7 @@ const Login = () => {
             </button>
             <br />
             <div className="text-center">
-              <Link
-                to={{ pathname: "/forgot-password", state: { role: role } }}
-              >
+              <Link to="/forgot-password" state={{ role: role }}>
                 Forgot Password
               </Link>
             </div>

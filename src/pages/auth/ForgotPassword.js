@@ -13,6 +13,8 @@ const Forgotpassword = () => {
   const dispatch = useDispatch();
   const location = useLocation();
   const role = location.state?.role;
+  console.log("Location state:",location.state);
+  console.log("Role:",role);
 
   const schema = Yup.object().shape({
     email: Yup.string()

@@ -26,6 +26,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const userState = useSelector((state) => state?.user?.user);
   const [rerender, setRerender] = useState(0);
+  console.log("Rerender")
   useEffect(() => {
     if (userState?.role === "admin") {
       dispatch(getAllUser());
@@ -57,7 +58,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(loadUserFromSecureStore());
-  }, [dispatch]);
+  }, [dispatch,rerender]);
 
   return (
     <>

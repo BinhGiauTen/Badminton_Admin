@@ -9,7 +9,7 @@ const getAllOrders = async () => {
 };
 const getAllOrdersForCoach = async (id) => {
   const response = await axiosInstance.get(
-    process.env.REACT_APP_BASE_URL + `order/${id}`
+    process.env.REACT_APP_BASE_URL + `order/coach/${id}`
   );
   return response.data;
 };

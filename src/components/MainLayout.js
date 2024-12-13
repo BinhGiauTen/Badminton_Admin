@@ -5,7 +5,6 @@ import {
   AiOutlinePicLeft,
   AiOutlinePicRight,
 } from "react-icons/ai";
-import { MdCircleNotifications } from "react-icons/md";
 import { Outlet } from "react-router-dom";
 import { FaClipboardList, FaBloggerB, FaCcMastercard } from "react-icons/fa";
 import { FaAtlas } from "react-icons/fa";
@@ -15,7 +14,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../features/auth/authSlice";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import AuthContext from "../context/AuthContext";
 import { loadUserFromSecureStore } from "../features/user/userSlice";
 import ProfileModal from "./ProfileModal";
@@ -197,12 +196,6 @@ const MainLayout = () => {
               }}
             />
             <div className="d-flex gap-4 align-items-center dropdown">
-              <div className="position-relative">
-                <MdCircleNotifications className="fs-4" />
-                <span className="badge bg-warning rounded-circle p-1 position-absolute">
-                  3
-                </span>
-              </div>
               <div className="d-flex gap-3 align-items-center">
                 <div>
                   <img
@@ -264,6 +257,18 @@ const MainLayout = () => {
       <ProfileModal
         open={isModalVisible}
         onClose={handleCloseModal}
+      />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
       />
     </>
   );

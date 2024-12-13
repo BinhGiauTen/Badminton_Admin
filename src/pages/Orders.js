@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Table } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrders } from "../features/order/orderSlice";
+import { getAllOrders, getAllOrdersForCoach } from "../features/order/orderSlice";
 import { format } from "date-fns";
 
 const Orders = () => {
+  const userState = useSelector((state) => state?.user?.user);
   const columns = [
     {
       title: "SNo",
@@ -34,7 +35,12 @@ const Orders = () => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(getAllOrders());
+    if(userState?.role ==="admin"){
+      dispatch(getAllOrders());
+    }else{
+      dispatch(getAllOrdersForCoach(userState?.id));
+    }
+    
   }, [dispatch]);
 
   const orderState = useSelector((state) => state.order.orders);
