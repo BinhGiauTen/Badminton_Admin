@@ -349,7 +349,7 @@ const CourseDetail = () => {
           )}
         </div>
         <br />
-        {reviews.length > 0 ? (
+        {reviews?.length > 0 ? (
           <List
             itemLayout="horizontal"
             dataSource={reviews}
