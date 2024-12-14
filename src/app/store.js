@@ -11,6 +11,7 @@ import paidLessonReducer from "../features/paidLesson/paidLessonSlice";
 import questionReducer from "../features/question/questionSlice";
 import answerReducer from "../features/answer/answerSlice";
 import orderReducer from "../features/order/orderSlice";
+import reviewReducer from "../features/review/reviewSlice";
 export const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -24,6 +25,7 @@ export const store = configureStore({
     paidLesson: paidLessonReducer,
     question: questionReducer,
     answer: answerReducer,
-    order: orderReducer
+    order: orderReducer,
+    review: reviewReducer
   },
 });

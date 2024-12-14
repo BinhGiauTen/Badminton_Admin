@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import Questions from "../../components/Questions";
+import PaidQuestions from "../../components/PaidQuestions";
 
 const FreeLesson = () => {
   const lessonState = useSelector((state) => state?.paidLesson?.paidLesson);
@@ -88,7 +89,7 @@ const FreeLesson = () => {
           <p>No content available</p>
         )}
       </div>
-      <Questions />
+      <PaidQuestions />
     </>
   );
 };

@@ -4,24 +4,24 @@ import { Button, Collapse, Input, List } from "antd";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   deleteQuestion,
-  getAllQuestionByFreeLessonId,
+  getAllQuestionByPaidLessonId,
 } from "../features/question/questionSlice";
-import { generateQuizQuestionsForFreeLesson } from "../features/openAi/openAiSlice";
+import { generateQuizQuestionsForPaidLesson } from "../features/openAi/openAiSlice";
 import { toast } from "react-toastify";
 import { AiFillDelete } from "react-icons/ai";
 import { BiEdit } from "react-icons/bi";
 import CustomModal from "../components/CustomModal";
-import { getAFreeLesson } from "../features/freeLesson/freeLessonSlice";
 import {
   createAnswer,
   deleteAnswer,
   getAllAnswerByQuestionId,
   updateAnswer,
 } from "../features/answer/answerSlice";
+import { getAPaidLesson } from "../features/paidLesson/paidLessonSlice";
 
 const { Panel } = Collapse;
 
-const Questions = () => {
+const PaidQuestions = () => {
   const [openDeleteQuestionModal, setOpenDeleteQuestionModal] = useState(false);
   const [openDeleteAnswerModal, setOpenDeleteAnswerModal] = useState(false);
   const showDeleteAnswerModal = () => setOpenDeleteAnswerModal(true);
@@ -50,8 +50,8 @@ const Questions = () => {
   const questions = useSelector((state) => state?.question?.questions);
 
   useEffect(() => {
-    dispatch(getAllQuestionByFreeLessonId(lessonId));
-    dispatch(getAFreeLesson(lessonId));
+    dispatch(getAllQuestionByPaidLessonId(lessonId));
+    dispatch(getAPaidLesson(lessonId));
   }, [dispatch, lessonId]);
 
   const handleClickAddQuestion = () => {
@@ -60,12 +60,12 @@ const Questions = () => {
 
   const handleGenerateQuiz = () => {
     setIsGeneratingQuiz(true);
-    dispatch(generateQuizQuestionsForFreeLesson(lessonId))
+    dispatch(generateQuizQuestionsForPaidLesson(lessonId))
       .unwrap()
       .then(() => {
         toast.success("Generate Quiz successfully");
         setTimeout(() => {
-          dispatch(getAllQuestionByFreeLessonId(lessonId));
+          dispatch(getAllQuestionByPaidLessonId(lessonId));
         }, 1000);
       })
       .catch((error) => {
@@ -85,7 +85,7 @@ const Questions = () => {
       .unwrap()
       .then(() => {
         setOpenDeleteQuestionModal(false);
-        dispatch(getAllQuestionByFreeLessonId(lessonId));
+        dispatch(getAllQuestionByPaidLessonId(lessonId));
       })
       .catch((error) => {
         toast.error(
@@ -116,7 +116,7 @@ const Questions = () => {
     dispatch(deleteAnswer(answerId))
       .unwrap()
       .then(() => {
-        dispatch(getAllQuestionByFreeLessonId(lessonId));
+        dispatch(getAllQuestionByPaidLessonId(lessonId));
         fetchAnswersByQuestionId(questionId);
         setOpenDeleteAnswerModal(false);
       })
@@ -140,7 +140,7 @@ const Questions = () => {
       .then(() => {
         toast.success("Answer added successfully!");
         setNewAnswer("");
-        dispatch(getAllQuestionByFreeLessonId(lessonId));
+        dispatch(getAllQuestionByPaidLessonId(lessonId));
         fetchAnswersByQuestionId(questionId);
       })
       .catch((error) => {
@@ -339,4 +339,4 @@ const Questions = () => {
   );
 };
 
-export default Questions;
+export default PaidQuestions;

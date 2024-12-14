@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Table, Card, Typography, Space, Divider } from "antd";
+import { Button, Table, Card, Typography, Space, Divider, Rate } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BiEdit } from "react-icons/bi";
@@ -25,6 +25,8 @@ import {
   deletePaidLesson,
   getAPaidLesson,
 } from "../features/paidLesson/paidLessonSlice";
+import { getReviewByCourseId } from "../features/review/reviewSlice";
+import { Avatar, List } from "antd";
 import UserModal from "../components/UserModal";
 
 const { Title, Text } = Typography;
@@ -35,6 +37,8 @@ const CourseDetail = () => {
   const [openUserModal, setOpenUserModal] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
   const [paidLessonId, setPaidLessonId] = useState("");
+  const defaultAvatar = "/images/default.png";
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -56,6 +60,8 @@ const CourseDetail = () => {
   const userCourses = useSelector(
     (state) => state?.paidCourse?.paidCourse?.user_course || []
   );
+  const reviews = useSelector((state) => state?.review?.reviews?.data);
+  console.log("Review:", reviews);
 
   const users = userCourses.map((userCourse) => ({
     id: userCourse?.user?.id,
@@ -67,8 +73,10 @@ const CourseDetail = () => {
   useEffect(() => {
     if (isFreeCourse && courseId) {
       dispatch(getAFreeCourse(courseId));
+      dispatch(getReviewByCourseId(courseId));
     } else if (isPaidCourse && courseId) {
       dispatch(getAPaidCourse(courseId));
+      dispatch(getReviewByCourseId(courseId));
     }
   }, [dispatch, courseId, isFreeCourse, isPaidCourse]);
 
@@ -278,6 +286,7 @@ const CourseDetail = () => {
           </>
         ) : null}
         <Divider />
+
         <div className="course-thumbnail">
           <Title level={5}>Thumbnail</Title>
           <img
@@ -339,6 +348,39 @@ const CourseDetail = () => {
             </Button>
           )}
         </div>
+        <br />
+        {reviews.length > 0 ? (
+          <List
+            itemLayout="horizontal"
+            dataSource={reviews}
+            renderItem={(review) => (
+              <List.Item>
+                <List.Item.Meta
+                  avatar={
+                    <Avatar src={review?.user?.avatar || defaultAvatar} />
+                  }
+                  title={
+                    <>
+                      {review?.user?.firstName + " " + review?.user?.lastName}
+                      <div>
+                        <Rate
+                          value={review.rating}
+                          disabled
+                          style={{ fontSize: 14 }}
+                        />
+                      </div>
+                    </>
+                  }
+                  description={review.comment}
+                />
+              </List.Item>
+            )}
+          />
+        ) : (
+          <div style={{ textAlign: "left", marginTop: 20 }}>
+            <Text type="secondary">No reviews</Text>
+          </div>
+        )}
       </Card>
 
       <Table
