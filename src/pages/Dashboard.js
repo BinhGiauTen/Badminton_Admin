@@ -94,7 +94,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (selectedCoach) {
-      dispatch(getRevenueByMonthForCoach(selectedCoach)); 
+      dispatch(getRevenueByMonthForCoach(selectedCoach));
     }
   }, [dispatch, selectedCoach]);
 
@@ -139,18 +139,20 @@ const Dashboard = () => {
           placeholder="End Date"
         />
         <Button onClick={handleFilter}>Filter</Button>
-        <Select
-          placeholder="Select Coach"
-          value={selectedCoach}
-          onChange={(value) => setSelectedCoach(value)}
-          style={{ width: 200 }}
-        >
-          {coaches?.map((coach) => (
-            <Select.Option key={coach?.id} value={coach?.id}>
-              {coach?.firstName + " " + coach?.lastName}
-            </Select.Option>
-          ))}
-        </Select>
+        {userState?.role === "admin" && (
+          <Select
+            placeholder="Select Coach"
+            value={selectedCoach}
+            onChange={(value) => setSelectedCoach(value)}
+            style={{ width: 200 }}
+          >
+            {coaches?.map((coach) => (
+              <Select.Option key={coach?.id} value={coach?.id}>
+                {coach?.firstName + " " + coach?.lastName}
+              </Select.Option>
+            ))}
+          </Select>
+        )}
       </div>
 
       <div>

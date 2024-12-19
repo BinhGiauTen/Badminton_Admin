@@ -36,6 +36,7 @@ const CourseDetail = () => {
   const [openDeleteCourseModal, setOpenDeleteCourseModal] = useState(false);
   const [openDeleteLessonModal, setOpenDeleteLessonModal] = useState(false);
   const [openAskApprove, setOpenAskApprove] = useState(false);
+  const [openAskUnApprove, setOpenAskUnApprove] = useState(false);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
   const [paidLessonId, setPaidLessonId] = useState("");
@@ -138,6 +139,7 @@ const CourseDetail = () => {
 
   const showDeleteCourseModal = () => setOpenDeleteCourseModal(true);
   const showAskApprove = () => setOpenAskApprove(true);
+  const showAskUnApprove = () => setOpenAskUnApprove(true);
   const showDeleteLessonModal = (id) => {
     if (isFreeCourse) {
       setFreeLessonId(id);
@@ -151,6 +153,7 @@ const CourseDetail = () => {
     setOpenDeleteCourseModal(false);
     setOpenDeleteLessonModal(false);
     setOpenAskApprove(false);
+    setOpenAskUnApprove(false);
   };
 
   const showUserModal = () => {
@@ -266,13 +269,27 @@ const CourseDetail = () => {
       ...course,
       status: "publish",
     };
-    console.log("Data:", data);
     dispatch(updatePaidCourse({ id: course?.id, paidCourseData: data }))
       .unwrap()
       .then(() => {
         toast.success("Approve course successfully");
         dispatch(getAPaidCourse(courseId));
         setOpenAskApprove(false);
+      })
+      .catch(handleError);
+  };
+
+  const handleUnApprove = () => {
+    const data = {
+      ...course,
+      status: "non-publish",
+    };
+    dispatch(updatePaidCourse({ id: course?.id, paidCourseData: data }))
+      .unwrap()
+      .then(() => {
+        toast.success("Unapprove course successfully");
+        dispatch(getAPaidCourse(courseId));
+        setOpenAskUnApprove(false);
       })
       .catch(handleError);
   };
@@ -392,6 +409,19 @@ const CourseDetail = () => {
               Approve Course
             </Button>
           )}
+          {isAdmin && course?.status === "publish" && (
+            <Button
+              type="primary"
+              onClick={showAskUnApprove}
+              block
+              style={{
+                width: "200px",
+                marginLeft: "10px",
+              }}
+            >
+              Unapprove Course
+            </Button>
+          )}
         </div>
         <br />
         {reviews?.length > 0 ? (
@@ -448,6 +478,12 @@ const CourseDetail = () => {
         hideModal={hideModal}
         performAction={handleApprove}
         title="Are you sure you want to approve this course?"
+      />
+      <CustomModal
+        open={openAskUnApprove}
+        hideModal={hideModal}
+        performAction={handleUnApprove}
+        title="Are you sure you want to Unapprove this course?"
       />
 
       <CustomModal
