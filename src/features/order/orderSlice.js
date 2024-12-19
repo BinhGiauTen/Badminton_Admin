@@ -57,6 +57,18 @@ export const getRevenueByMonthForCoach = createAsyncThunk(
   }
 );
 
+export const filterOrdersByDate = createAsyncThunk(
+  "order/filter-orders-by-date",
+  async (date, thunkAPI) => {
+    try {
+      return await orderService.filterOrdersByDate(date);
+    } catch (error) {
+      const message = error.message || "Network Error";
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 export const orderSlice = createSlice({
   name: "orders",
   initialState,
@@ -118,6 +130,21 @@ export const orderSlice = createSlice({
         state.revenue = action.payload;
       })
       .addCase(getRevenueByMonthForCoach.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.isSuccess = false;
+        state.message = action.error;
+      })
+      .addCase(filterOrdersByDate.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(filterOrdersByDate.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isError = false;
+        state.isSuccess = true;
+        state.revenue = action.payload;
+      })
+      .addCase(filterOrdersByDate.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.isSuccess = false;

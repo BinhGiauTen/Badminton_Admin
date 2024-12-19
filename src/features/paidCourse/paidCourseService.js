@@ -7,6 +7,13 @@ const getAllPaidCourse = async () => {
   return response.data;
 };
 
+const getAllPaidCourseForAdmin = async () => {
+  const response = await axiosInstance.get(
+    process.env.REACT_APP_BASE_URL + `paid-courses/admin`
+  );
+  return response.data;
+};
+
 const createPaidCourse = async (paidCourse) => {
   const response = await axiosInstance.post(
     process.env.REACT_APP_BASE_URL + `paid-courses`,
@@ -79,5 +86,6 @@ const paidCourseService = {
   getPaidCourseByCategoryId,
   getPaidCourseByCoachId,
   updatePaidCourseThumbnail,
+  getAllPaidCourseForAdmin
 };
 export default paidCourseService;

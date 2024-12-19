@@ -6,7 +6,7 @@ import { BiEdit } from "react-icons/bi";
 import { IoIosMore } from "react-icons/io";
 
 import {
-  getAllPaidCourse,
+  getAllPaidCourseForAdmin,
   getPaidCourseByCoachId,
 } from "../../features/paidCourse/paidCourseSlice";
 
@@ -16,7 +16,7 @@ const PaidCourses = () => {
 
   useEffect(() => {
     if (userState?.role === "admin") {
-      dispatch(getAllPaidCourse());
+      dispatch(getAllPaidCourseForAdmin());
     } else {
       dispatch(getPaidCourseByCoachId(userState?.id));
     }
@@ -35,6 +35,7 @@ const PaidCourses = () => {
     lessonQuantity:
       course?.lessonQuantity || course?.paid_course?.lessonQuantity,
     price: course?.price || course?.paid_course?.price,
+    status: course?.status || course?.paid_course?.status,
     categoryId: course?.categoryId || course?.paid_course?.categoryId,
     type: course?.type || course?.paid_course?.type,
     action: (
@@ -86,6 +87,7 @@ const PaidCourses = () => {
     },
     { title: "Lesson Quantity", dataIndex: "lessonQuantity" },
     { title: "Price", dataIndex: "price" },
+    { title: "Status", dataIndex: "status" },
     { title: "CategoryId", dataIndex: "categoryId" },
     { title: "Type", dataIndex: "type" },
     { title: "Action", dataIndex: "action", width: "150px" },

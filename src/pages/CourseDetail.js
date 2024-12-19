@@ -18,6 +18,7 @@ import {
 import {
   deletePaidCourse,
   getAPaidCourse,
+  updatePaidCourse,
   updatePaidCourseThumbnail,
 } from "../features/paidCourse/paidCourseSlice";
 import { toast } from "react-toastify";
@@ -34,6 +35,7 @@ const { Title, Text } = Typography;
 const CourseDetail = () => {
   const [openDeleteCourseModal, setOpenDeleteCourseModal] = useState(false);
   const [openDeleteLessonModal, setOpenDeleteLessonModal] = useState(false);
+  const [openAskApprove, setOpenAskApprove] = useState(false);
   const [openUserModal, setOpenUserModal] = useState(false);
   const [freeLessonId, setFreeLessonId] = useState("");
   const [paidLessonId, setPaidLessonId] = useState("");
@@ -135,6 +137,7 @@ const CourseDetail = () => {
   }));
 
   const showDeleteCourseModal = () => setOpenDeleteCourseModal(true);
+  const showAskApprove = () => setOpenAskApprove(true);
   const showDeleteLessonModal = (id) => {
     if (isFreeCourse) {
       setFreeLessonId(id);
@@ -147,6 +150,7 @@ const CourseDetail = () => {
   const hideModal = () => {
     setOpenDeleteCourseModal(false);
     setOpenDeleteLessonModal(false);
+    setOpenAskApprove(false);
   };
 
   const showUserModal = () => {
@@ -257,6 +261,34 @@ const CourseDetail = () => {
     }
   };
 
+  const handleApprove = () => {
+    const data = {
+      ...course,
+      status: "publish",
+    };
+    console.log("Data:", data);
+    dispatch(updatePaidCourse({ id: course?.id, paidCourseData: data }))
+      .unwrap()
+      .then(() => {
+        toast.success("Approve course successfully");
+        dispatch(getAPaidCourse(courseId));
+        setOpenAskApprove(false);
+      })
+      .catch(handleError);
+  };
+
+  const handleError = (error) => {
+      if (error === "Request failed with status code 404") {
+        toast.error(`Course with id ${courseId} not found`);
+      } else if (error === "Network Error") {
+        toast.error(
+          "There was a problem with the server. Please try again later."
+        );
+      } else {
+        toast.error("An unknown error occurred.");
+      }
+    };
+
   return (
     <div className="course-detail-container">
       <Card className="course-info-card" bordered>
@@ -347,6 +379,19 @@ const CourseDetail = () => {
               View Users
             </Button>
           )}
+          {isAdmin && course?.status === "non-publish" && (
+            <Button
+              type="primary"
+              onClick={showAskApprove}
+              block
+              style={{
+                width: "200px",
+                marginLeft: "10px",
+              }}
+            >
+              Approve Course
+            </Button>
+          )}
         </div>
         <br />
         {reviews?.length > 0 ? (
@@ -396,6 +441,13 @@ const CourseDetail = () => {
         hideModal={hideModal}
         performAction={handleDeleteCourse}
         title="Are you sure you want to delete this course?"
+      />
+
+      <CustomModal
+        open={openAskApprove}
+        hideModal={hideModal}
+        performAction={handleApprove}
+        title="Are you sure you want to approve this course?"
       />
 
       <CustomModal

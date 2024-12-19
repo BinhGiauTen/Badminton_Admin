@@ -27,10 +27,19 @@ const getRevenueByMonthForCoach = async (id) => {
   return response.data;
 };
 
+const filterOrdersByDate = async (date) => {
+  const response = await axiosInstance.post(
+    process.env.REACT_APP_BASE_URL + `order/filter`,
+    date
+  );
+  return response.data;
+};
+
 const orderService = {
   getAllOrders,
   getAllOrdersForCoach,
   getRevenueByMonth,
-  getRevenueByMonthForCoach
+  getRevenueByMonthForCoach,
+  filterOrdersByDate
 };
 export default orderService;
